@@ -36,8 +36,37 @@ describe Daywalker::District do
       end
 
     end
+  end
 
+  describe 'find_by_zipcode' do
+    describe 'happy path' do
+      setup do
+        FakeWeb.register_uri('http://services.sunlightlabs.com/api/districts.getDistrictsFromZip.xml?apikey=redacted&zip=27511', :response => fixture_path_for('districts_by_zip.xml'))
+      end
 
+      subject { Daywalker::District.find_by_zip(27511) }
+
+      specify { subject.size.should == 2 }
+
+      specify { subject[0].state.should == 'NC' }
+      specify { subject[0].number.should == 13 }
+      
+      specify { subject[1].state.should == 'NC' }
+      specify { subject[1].number.should == 4 }
+    end
+
+    describe 'bad api key' do
+      setup do
+        FakeWeb.register_uri('http://services.sunlightlabs.com/api/districts.getDistrictsFromZip.xml?apikey=redacted&zip=27511', :response => fixture_path_for('districts_by_zip_bad_api.xml'))
+      end
+
+      specify 'should raise BadApiKey' do
+        lambda {
+          Daywalker::District.find_by_zip(27511)
+        }.should raise_error(Daywalker::BadApiKey)
+      end
+
+    end
   end
 end
 

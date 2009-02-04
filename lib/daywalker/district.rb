@@ -19,5 +19,15 @@ module Daywalker
       end
     end
 
+    def self.find_by_zip(zip)
+      query = { :zip => zip, :apikey => Daywalker.api_key }
+      response = get ('/districts.getDistrictsFromZip.xml', :query => query)
+
+      case response.code.to_i
+      when 403 then raise BadApiKey
+      when 200 then parse(response.body)
+      else          raise "Don't know how to handle code #{response.code.inspect}"
+      end
+    end
   end
 end
