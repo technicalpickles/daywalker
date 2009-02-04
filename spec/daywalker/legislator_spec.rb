@@ -77,7 +77,7 @@ describe Daywalker::Legislator do
     specify { subject.state.should == 'NC' }
     specify { subject.votesmart_id.should == 119 }
     specify { subject.official_rss.should == '' } 
-    specify { subject.party.should == 'D' }
+    specify { subject.party.should == :democrat }
     specify { subject.email.should == '' }
     specify { subject.crp_id.should == 'N00002260' }
     specify { subject.first_name.should == 'David' }

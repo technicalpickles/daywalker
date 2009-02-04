@@ -10,7 +10,7 @@ module Daywalker
     element 'state', String
     element 'votesmart_id', Integer
     element 'official_rss', String
-    element 'party', String
+    element 'party', self, :parser => :party_letter_to_sym
     element 'email', String
     element 'crp_id', String
     element 'first_name', String, :tag => 'firstname'
@@ -40,11 +40,22 @@ module Daywalker
       parse(response.body)
     end
 
+    protected
+
     def self.gender_letter_to_sym(letter)
       case letter
       when 'M' then :male
       when 'F' then :female
       else raise "unknown gender #{letter.inspect}"
+      end
+    end
+
+    def self.party_letter_to_sym(letter)
+      case letter
+      when 'D' then :democrat
+      when 'R' then :republican
+      when 'I' then :independent
+      else raise "Unknown party #{letter.inspect}"
       end
     end
   end
