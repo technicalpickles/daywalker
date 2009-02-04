@@ -3,6 +3,7 @@ require 'httparty'
 
 require 'daywalker/base'
 require 'daywalker/district'
+require 'daywalker/legislator'
 
 module Daywalker
   def self.api_key=(api_key)
