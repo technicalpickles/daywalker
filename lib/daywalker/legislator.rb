@@ -13,9 +13,9 @@ module Daywalker
     element 'party', String
     element 'email', String
     element 'crp_id', String
-    element 'firstname', String
-    element 'middlename', String
-    element 'lastname', String
+    element 'first_name', String, :tag => 'firstname'
+    element 'middle_name', String, :tag => 'middlename'
+    element 'last_name', String, :tag => 'lastname'
     element 'congress_office', String
     element 'bioguide_id', String
     element 'webform', String

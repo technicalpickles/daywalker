@@ -80,9 +80,9 @@ describe Daywalker::Legislator do
     specify { subject.party.should == 'D' }
     specify { subject.email.should == '' }
     specify { subject.crp_id.should == 'N00002260' }
-    specify { subject.firstname.should == 'David' }
-    specify { subject.middlename.should == 'Eugene' }
-    specify { subject.lastname.should == 'Price' }
+    specify { subject.first_name.should == 'David' }
+    specify { subject.middle_name.should == 'Eugene' }
+    specify { subject.last_name.should == 'Price' }
     specify { subject.congress_office.should == '2162 Rayburn House Office Building' }
     specify { subject.bioguide_id.should == 'P000523' }
     specify { subject.webform.should == 'http://price.house.gov/contact/contact_form.shtml' }
