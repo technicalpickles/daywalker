@@ -65,6 +65,18 @@ describe Daywalker::District do
           Daywalker::District.find_by_zip(27511)
         }.should raise_error(Daywalker::BadApiKey)
       end
+    end
+
+    describe 'missing zip' do
+      setup do
+        FakeWeb.register_uri('http://services.sunlightlabs.com/api/districts.getDistrictsFromZip.xml?apikey=redacted&zip=27511', :response => fixture_path_for('district_by_zip_missing_zip.xml'))
+      end
+
+      specify 'should raise District::MissingZip' do
+        lambda {
+          Daywalker::District.find_by_zip(27511)
+        }.should raise_error(Daywalker::District::MissingZip)
+      end
 
     end
   end
