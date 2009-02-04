@@ -18,7 +18,7 @@ module Daywalker
     element 'last_name', String, :tag => 'lastname'
     element 'congress_office', String
     element 'bioguide_id', String
-    element 'webform', String
+    element 'webform_url', String, :tag => 'webform'
     element 'youtube_url', String
     element 'nickname', String
     element 'phone', String

@@ -85,7 +85,7 @@ describe Daywalker::Legislator do
     specify { subject.last_name.should == 'Price' }
     specify { subject.congress_office.should == '2162 Rayburn House Office Building' }
     specify { subject.bioguide_id.should == 'P000523' }
-    specify { subject.webform.should == 'http://price.house.gov/contact/contact_form.shtml' }
+    specify { subject.webform_url.should == 'http://price.house.gov/contact/contact_form.shtml' }
     specify { subject.youtube_url.should == 'http://www.youtube.com/repdavidprice' }
     specify { subject.nickname.should == '' }
     specify { subject.phone.should == '202-225-1784' }
