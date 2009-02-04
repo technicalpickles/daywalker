@@ -9,9 +9,9 @@ module Daywalker
     element 'in_office', Boolean
     element 'state', String
     element 'votesmart_id', Integer
-    element 'official_rss', String
+    element 'official_rss_url', self, :tag => 'official_rss', :parser => :blank_to_nil
     element 'party', self, :parser => :party_letter_to_sym
-    element 'email', String
+    element 'email', self, :parser => :blank_to_nil
     element 'crp_id', String
     element 'first_name', String, :tag => 'firstname'
     element 'middle_name', String, :tag => 'middlename'
@@ -20,12 +20,12 @@ module Daywalker
     element 'bioguide_id', String
     element 'webform_url', String, :tag => 'webform'
     element 'youtube_url', String
-    element 'nickname', String
+    element 'nickname', self, :parser => :blank_to_nil
     element 'phone', String
     element 'fec_id', String
     element 'gender', self, :parser => :gender_letter_to_sym
-    element 'name_suffix', String
-    element 'twitter_id', String
+    element 'name_suffix', self, :parser => :blank_to_nil
+    element 'twitter_id', self, :parser => :blank_to_nil
     element 'sunlight_old_id', String
     element 'congresspedia_url', String
 
@@ -65,6 +65,10 @@ module Daywalker
       when 'Rep' then :representative
       else raise "Unknown title #{abbr.inspect}"
       end
+    end
+
+    def self.blank_to_nil(str)
+      str == '' ? nil : str
     end
   end
 end

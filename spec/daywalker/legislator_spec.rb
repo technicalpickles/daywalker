@@ -76,9 +76,9 @@ describe Daywalker::Legislator do
     specify { subject.in_office.should be_true }
     specify { subject.state.should == 'NC' }
     specify { subject.votesmart_id.should == 119 }
-    specify { subject.official_rss.should == '' } 
+    specify { subject.official_rss_url.should be_nil } 
     specify { subject.party.should == :democrat }
-    specify { subject.email.should == '' }
+    specify { subject.email.should be_nil }
     specify { subject.crp_id.should == 'N00002260' }
     specify { subject.first_name.should == 'David' }
     specify { subject.middle_name.should == 'Eugene' }
@@ -87,12 +87,12 @@ describe Daywalker::Legislator do
     specify { subject.bioguide_id.should == 'P000523' }
     specify { subject.webform_url.should == 'http://price.house.gov/contact/contact_form.shtml' }
     specify { subject.youtube_url.should == 'http://www.youtube.com/repdavidprice' }
-    specify { subject.nickname.should == '' }
+    specify { subject.nickname.should be_nil }
     specify { subject.phone.should == '202-225-1784' }
     specify { subject.fec_id.should == 'H6NC04037' }
     specify { subject.gender.should == :male }
-    specify { subject.name_suffix.should == '' }
-    specify { subject.twitter_id.should == '' }
+    specify { subject.name_suffix.should be_nil }
+    specify { subject.twitter_id.should be_nil }
     specify { subject.sunlight_old_id.should == 'fakeopenID319' }
     specify { subject.congresspedia_url.should == 'http://www.sourcewatch.org/index.php?title=David_Price' }
   end
