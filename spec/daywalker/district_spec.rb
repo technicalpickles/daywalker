@@ -17,8 +17,8 @@ describe Daywalker::District do
   describe 'find_by_latlng' do
     describe 'happy path' do
       before do
-        # curl -i "http://services.sunlightlabs.com/api/districts.getDistrictFromLatLong.xml?apikey=urkeyhere&latitude=40.739157&longitude=-73.990929" > districts_by_latlng.xm
-        FakeWeb.register_uri('http://services.sunlightlabs.com/api/districts.getDistrictFromLatLong.xml?apikey=redacted&latitude=40.739157&longitude=-73.990929', :response => fixture_path_for('districts_by_latlng.xml'))
+        # curl -i "http://services.sunlightlabs.com/api/districts.getDistrictFromLatLong.xml?apikey=urkeyhere&latitude=40.739157&longitude=-73.990929" > districts_by_latlng.xml
+        register_uri_with_response 'districts.getDistrictFromLatLong.xml?apikey=redacted&latitude=40.739157&longitude=-73.990929', 'districts_by_latlng.xml'
 
       end
 
@@ -32,7 +32,7 @@ describe Daywalker::District do
     describe 'bad api key' do
       before do
         # curl -i "http://services.sunlightlabs.com/api/districts.getDistrictFromLatLong.xml?apikey=badkeyhere&latitude=40.739157&longitude=-73.990929" > 'districts_by_latlng_bad_api.xml'
-        FakeWeb.register_uri('http://services.sunlightlabs.com/api/districts.getDistrictFromLatLong.xml?apikey=redacted&latitude=40.739157&longitude=-73.990929', :response => fixture_path_for('districts_by_latlng_bad_api.xml'))
+        register_uri_with_response('districts.getDistrictFromLatLong.xml?apikey=redacted&latitude=40.739157&longitude=-73.990929', 'districts_by_latlng_bad_api.xml')
       end
 
       specify 'should raise Daywalker::InvalidApiKey' do
@@ -45,7 +45,7 @@ describe Daywalker::District do
     describe 'missing latitude' do
       setup do
         # curl -i "http://services.sunlightlabs.com/api/districts.getDistrictFromLatLong.xml?apikey=urkeyhere&longitude=-73.990929" > 'districts_by_latlng_missing_lat.xml'
-        FakeWeb.register_uri('http://services.sunlightlabs.com/api/districts.getDistrictFromLatLong.xml?apikey=redacted&longitude=-73.990929', :response => fixture_path_for('districts_by_latlng_missing_lat.xml'))
+        register_uri_with_response('districts.getDistrictFromLatLong.xml?apikey=redacted&longitude=-73.990929', 'districts_by_latlng_missing_lat.xml')
       end
 
       specify 'should raise Daywalker::District::MissingLatitude' do
@@ -60,7 +60,7 @@ describe Daywalker::District do
     describe 'happy path' do
       setup do
         # curl -i "http://services.sunlightlabs.com/api/districts.getDistrictsFromZip.xml?apikey=urkeyhere&zip=27511" > districts_by_zip.xml
-        FakeWeb.register_uri('http://services.sunlightlabs.com/api/districts.getDistrictsFromZip.xml?apikey=redacted&zip=27511', :response => fixture_path_for('districts_by_zip.xml'))
+        register_uri_with_response('districts.getDistrictsFromZip.xml?apikey=redacted&zip=27511', 'districts_by_zip.xml')
       end
 
       subject { Daywalker::District.find_by_zip(27511) }
@@ -77,7 +77,7 @@ describe Daywalker::District do
     describe 'bad api key' do
       setup do
         # curl -i "http://services.sunlightlabs.com/api/districts.getDistrictsFromZip.xml?apikey=badkeyhere&zip=27511" > districts_by_zip_bad_api.xml 
-        FakeWeb.register_uri('http://services.sunlightlabs.com/api/districts.getDistrictsFromZip.xml?apikey=redacted&zip=27511', :response => fixture_path_for('districts_by_zip_bad_api.xml'))
+        register_uri_with_response 'districts.getDistrictsFromZip.xml?apikey=redacted&zip=27511', 'districts_by_zip_bad_api.xml'
       end
 
       specify 'should raise BadApiKey' do
@@ -90,7 +90,7 @@ describe Daywalker::District do
     describe 'missing zip' do
       setup do
         # curl -i "http://services.sunlightlabs.com/api/districts.getDistrictsFromZip.xml?apikey=urkeyhere" > districts_by_zip_missing_zip.xml
-        FakeWeb.register_uri('http://services.sunlightlabs.com/api/districts.getDistrictsFromZip.xml?apikey=redacted', :response => fixture_path_for('districts_by_zip_missing_zip.xml'))
+        register_uri_with_response 'districts.getDistrictsFromZip.xml?apikey=redacted', 'districts_by_zip_missing_zip.xml'
       end
 
       specify 'should raise District::MissingZip' do

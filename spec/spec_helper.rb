@@ -10,9 +10,12 @@ require 'daywalker'
 FakeWeb.allow_net_connect = false
 
 Spec::Runner.configure do |config|
-  
 end
 
-def fixture_path_for(fixture)
-  File.join File.dirname(__FILE__), 'fixtures', fixture
+def fixture_path_for(response)
+  File.join File.dirname(__FILE__), 'fixtures', response
+end
+
+def register_uri_with_response(uri, response)
+  FakeWeb.register_uri("http://services.sunlightlabs.com/api/#{uri}", :response => fixture_path_for(response))
 end
