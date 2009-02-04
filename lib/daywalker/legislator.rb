@@ -3,8 +3,8 @@ module Daywalker
     include HappyMapper
 
     tag 'legislator'
-    element 'district', Integer
-    element 'title', String
+    element 'district_number', Integer, :tag => 'district'
+    element 'title', self, :parser => :title_abbr_to_sym
     element 'eventful_id', String
     element 'in_office', Boolean
     element 'state', String
@@ -56,6 +56,14 @@ module Daywalker
       when 'R' then :republican
       when 'I' then :independent
       else raise "Unknown party #{letter.inspect}"
+      end
+    end
+
+    def self.title_abbr_to_sym(abbr)
+      case abbr
+      when 'Sen' then :senator
+      when 'Rep' then :representative
+      else raise "Unknown title #{abbr.inspect}"
       end
     end
   end

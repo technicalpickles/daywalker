@@ -70,8 +70,8 @@ describe Daywalker::Legislator do
     end
     subject { Daywalker::Legislator.parse(@xml) }
 
-    specify { subject.district.should == 4 }
-    specify { subject.title.should == 'Rep' }
+    specify { subject.district_number.should == 4 }
+    specify { subject.title.should == :representative }
     specify { subject.eventful_id.should == 'P0-001-000016562-5' }
     specify { subject.in_office.should be_true }
     specify { subject.state.should == 'NC' }
