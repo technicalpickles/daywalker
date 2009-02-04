@@ -14,4 +14,7 @@ module Daywalker
 
   class BadApiKey < StandardError
   end
+
+  class MissingParameter < StandardError
+  end
 end

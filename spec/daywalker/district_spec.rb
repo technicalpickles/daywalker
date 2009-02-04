@@ -48,10 +48,10 @@ describe Daywalker::District do
         register_uri_with_response('districts.getDistrictFromLatLong.xml?apikey=redacted&longitude=-73.990929', 'districts_by_latlng_missing_lat.xml')
       end
 
-      specify 'should raise Daywalker::District::MissingLatitude' do
+      specify 'should raise Daywalker::MissingParameter latitude' do
         lambda {
           Daywalker::District.find_by_latlng(nil, -73.990929)
-        }.should raise_error(Daywalker::District::MissingLatitude)
+        }.should raise_error(Daywalker::MissingParameter, 'latitude')
       end
     end
   end
@@ -93,10 +93,10 @@ describe Daywalker::District do
         register_uri_with_response 'districts.getDistrictsFromZip.xml?apikey=redacted', 'districts_by_zip_missing_zip.xml'
       end
 
-      specify 'should raise District::MissingZip' do
+      specify 'should raise District::MissingParameter zip' do
         lambda {
           Daywalker::District.find_by_zip(nil)
-        }.should raise_error(Daywalker::District::MissingZip)
+        }.should raise_error(Daywalker::MissingParameter, 'zip')
       end
 
     end

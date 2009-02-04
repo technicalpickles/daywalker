@@ -1,8 +1,5 @@
 module Daywalker
   class District < Base
-    class MissingZip < StandardError; end
-    class MissingLatitude < StandardError; end
-
     include HappyMapper
 
     tag     'district'
@@ -10,7 +7,7 @@ module Daywalker
     element 'state', String
 
     def self.find_by_latlng(lat, lng)
-      raise MissingLatitude if lat.nil?
+      raise(MissingParameter, 'latitude') if lat.nil?
 
       query = {
         :latitude => lat,
@@ -22,7 +19,7 @@ module Daywalker
     end
 
     def self.find_by_zip(zip)
-      raise MissingZip if zip.nil?
+      raise(MissingParameter, 'zip') if zip.nil?
 
       query = {
         :zip => zip,
@@ -46,12 +43,7 @@ module Daywalker
     end
 
     def self.handle_bad_request(body)
-      case body
-      when "Missing Parameter: 'zip'" then raise MissingZip
-      when "Missing Parameter: 'latitude'" then raise MissingLatitude
-      else
-        raise "Don't know how to handle #{body.inspect}"
-      end
+      raise "Don't know how to handle #{body.inspect}"
 
     end
   end
