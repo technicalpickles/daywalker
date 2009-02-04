@@ -23,7 +23,7 @@ module Daywalker
     element 'nickname', String
     element 'phone', String
     element 'fec_id', String
-    element 'gender', String
+    element 'gender', self, :parser => :gender_letter_to_sym
     element 'name_suffix', String
     element 'twitter_id', String
     element 'sunlight_old_id', String
@@ -38,6 +38,14 @@ module Daywalker
       response = get('/legislators.allForZip.xml', :query => query)
 
       parse(response.body)
+    end
+
+    def self.gender_letter_to_sym(letter)
+      case letter
+      when 'M' then :male
+      when 'F' then :female
+      else raise "unknown gender #{letter.inspect}"
+      end
     end
   end
 end

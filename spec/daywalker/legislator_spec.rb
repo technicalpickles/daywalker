@@ -90,7 +90,7 @@ describe Daywalker::Legislator do
     specify { subject.nickname.should == '' }
     specify { subject.phone.should == '202-225-1784' }
     specify { subject.fec_id.should == 'H6NC04037' }
-    specify { subject.gender.should == 'M' }
+    specify { subject.gender.should == :male }
     specify { subject.name_suffix.should == '' }
     specify { subject.twitter_id.should == '' }
     specify { subject.sunlight_old_id.should == 'fakeopenID319' }
