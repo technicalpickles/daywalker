@@ -25,6 +25,10 @@ describe Daywalker::Legislator do
       subject { Daywalker::Legislator.find_all_by_zip 27511 }
 
       specify { subject.size.should == 4 }
+      specify { subject[0].votesmart_id.should == 119 }
+      specify { subject[1].votesmart_id.should == 21082 }
+      specify { subject[2].votesmart_id.should == 21787 }
+      specify { subject[3].votesmart_id.should == 10205 }
     end
 
   end
