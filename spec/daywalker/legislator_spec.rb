@@ -24,24 +24,8 @@ describe Daywalker::Legislator do
         @legislators = Daywalker::Legislator.find_all_by_zip 27511
       end
 
-      it 'return 4 legislators' do
-        @legislators.size.should == 4
-      end
-      
-      it 'should have first legislator with votesmart id 119' do
-        @legislators[0].votesmart_id.should == 119
-      end
-
-      it 'should have second legislator with votesmart id 21082' do
-        @legislators[1].votesmart_id.should == 21082
-      end
-
-      it 'should have third legislator with votesmart id 21787' do
-        @legislators[2].votesmart_id.should == 21787
-      end
-
-      it 'should have fourth legislator with votesmart id 10205' do
-        @legislators[3].votesmart_id.should == 10205
+      it 'return legislators identified by votersmart ids 119, 21082, 21787, and 10205' do
+        @legislators.map{|each| each.votesmart_id}.should == [119, 21082, 21787, 10205]
       end
     end
 
@@ -130,7 +114,6 @@ describe Daywalker::Legislator do
           }.should raise_error(Daywalker::BadApiKey)
 
         end
-
       end
     end
 
