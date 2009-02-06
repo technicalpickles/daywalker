@@ -43,6 +43,12 @@ module Daywalker
       handle_response(response)
     end
 
+    def self.find(conditions)
+      query = conditions.merge(:apikey => Daywalker.api_key)
+      response = get('/legislators.getList', :query => query)
+      parse(response.body)
+    end
+
     protected
 
     def self.gender_letter_to_sym(letter)

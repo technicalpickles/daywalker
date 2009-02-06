@@ -14,7 +14,7 @@ describe Daywalker::Legislator do
     Daywalker.api_key = nil
   end
 
-  describe 'found by find_all_by_zip' do
+  describe 'find_all_by_zip' do
 
     describe 'happy path' do
       setup do
@@ -67,6 +67,48 @@ describe Daywalker::Legislator do
     end
   end
 
+  describe 'found with find(:one)' do
+
+    describe 'by state and district, with one result,' do
+      before do
+        register_uri_with_response 'legislators.getList?apikey=redacted&state=NY&district=4', 'legislators_find_by_ny_district_4.xml'
+        @legislators = Daywalker::Legislator.find(:state => 'NY', :district => 4)
+      end
+
+      it 'should have one result' do
+        @legislators.size.should == 1
+      end
+
+      it 'should have first legislator with votesmart id 119' do
+        @legislators.first.votesmart_id.should == 119
+      end
+    end
+
+  end
+
+  describe 'found with find(:all)' do
+    describe 'by state and title, with multiple results' do
+      before do
+        # curl -i "http://services.sunlightlabs.com/api/legislators.getList.xml?state=NY&title=Sen&apikey=redacted" > legislators_find_ny_senators.xml
+        register_uri_with_response 'legislators.getList?state=NY&apikey=redacted&title=senator', 'legislators_find_ny_senators.xml'
+        @legislators = Daywalker::Legislator.find(:state => 'NY', :title => :senator)
+      end
+
+      it 'should have 2 results' do
+        @legislators.size.should == 2
+      end
+
+      it 'should have first legislator with votesmart id 55463' do
+        @legislators[0].votesmart_id.should == 55463
+      end
+
+      it 'should have second legislator with votesmart_id id 26976' do
+        @legislators[1].votesmart_id.should == 26976
+      end
+
+    end
+
+  end
   describe 'parsed from XML' do
     setup do
       @xml = <<-XML
