@@ -50,12 +50,20 @@ describe Daywalker::Legislator do
         #  curl -i "http://services.sunlightlabs.com/api/legislators.allForZip.xml?zip=27511&apikey=redacted" > legislators_by_zip
         register_uri_with_response 'legislators.allForZip.xml?zip=27511&apikey=redacted', 'legislators_by_zip_bad_api.xml'
       end
+
       it 'should raise bad API key error' do
         lambda {
           Daywalker::Legislator.find_all_by_zip 27511
         }.should raise_error(Daywalker::BadApiKey) 
       end
-      
+    end
+
+    describe 'without a zip code' do
+      it 'should raise a missing parameter error for zip' do
+        lambda {
+          Daywalker::Legislator.find_all_by_zip nil
+        }.should raise_error(Daywalker::MissingParameter, 'zip') 
+      end
     end
   end
 

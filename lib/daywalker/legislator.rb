@@ -30,6 +30,7 @@ module Daywalker
     element 'congresspedia_url', String
 
     def self.find_all_by_zip(zip)
+      raise MissingParameter, 'zip' if zip.nil?
       query = {
         :zip => zip,
         :apikey => Daywalker.api_key
