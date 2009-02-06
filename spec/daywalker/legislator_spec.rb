@@ -71,7 +71,7 @@ describe Daywalker::Legislator do
 
     describe 'by state and district, with one result,' do
       before do
-        register_uri_with_response 'legislators.getList?apikey=redacted&state=NY&district=4', 'legislators_find_by_ny_district_4.xml'
+        register_uri_with_response 'legislators.get?apikey=redacted&state=NY&district=4', 'legislators_find_by_ny_district_4.xml'
         @legislator = Daywalker::Legislator.find(:only, :state => 'NY', :district => 4)
       end
 

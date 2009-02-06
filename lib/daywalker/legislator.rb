@@ -45,7 +45,7 @@ module Daywalker
 
     def self.find(sym, conditions)
       url = case sym
-      when :only then '/legislators.getList'
+      when :only then '/legislators.get'
       when :all then '/legislators.getList'
       end
 
