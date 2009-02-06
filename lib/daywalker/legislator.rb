@@ -51,13 +51,11 @@ module Daywalker
 
       query = conditions.merge(:apikey => Daywalker.api_key)
       response = get(url, :query => query)
-      parse(response.body)
 
       case sym
-      when :only then parse(response.body).first
-      when :all then parse(response.body)
+      when :only then handle_response(response).first
+      when :all then handle_response(response)
       end
-      
     end
 
     protected
