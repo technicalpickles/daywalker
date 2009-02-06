@@ -7,6 +7,7 @@ module Daywalker
     element 'state', String
 
     def self.find_by_latlng(lat, lng)
+      # TODO use ArgumentError
       raise(MissingParameter, 'latitude') if lat.nil?
 
       query = {
