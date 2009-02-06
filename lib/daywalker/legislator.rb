@@ -43,10 +43,21 @@ module Daywalker
       handle_response(response)
     end
 
-    def self.find(conditions)
+    def self.find(sym, conditions)
+      url = case sym
+      when :only then '/legislators.getList'
+      when :all then '/legislators.getList'
+      end
+
       query = conditions.merge(:apikey => Daywalker.api_key)
-      response = get('/legislators.getList', :query => query)
+      response = get(url, :query => query)
       parse(response.body)
+
+      case sym
+      when :only then parse(response.body).first
+      when :all then parse(response.body)
+      end
+      
     end
 
     protected
