@@ -13,6 +13,7 @@ module Daywalker
     element 'party', self, :parser => :party_letter_to_sym
     element 'email', self, :parser => :blank_to_nil
     element 'crp_id', String
+    element 'website_url', String, :tag => 'website'
     element 'first_name', String, :tag => 'firstname'
     element 'middle_name', String, :tag => 'middlename'
     element 'last_name', String, :tag => 'lastname'
