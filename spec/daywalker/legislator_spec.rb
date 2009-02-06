@@ -89,18 +89,10 @@ describe Daywalker::Legislator do
           @legislators = Daywalker::Legislator.find(:all, :state => 'NY', :title => :senator)
         end
 
-        it 'should have 2 results' do
-          @legislators.size.should == 2
-        end
+        it 'should return legislators with votesmart ids 55463 and 26976' do
+          @legislators.map{|each| each.votesmart_id}.should == [55463, 26976]
 
-        it 'should have first legislator with votesmart id 55463' do
-          @legislators[0].votesmart_id.should == 55463
         end
-
-        it 'should have second legislator with votesmart_id id 26976' do
-          @legislators[1].votesmart_id.should == 26976
-        end
-
       end
 
       describe 'with bad API key' do
