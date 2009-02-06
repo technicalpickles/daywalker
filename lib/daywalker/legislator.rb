@@ -30,14 +30,13 @@ module Daywalker
     element 'congresspedia_url', String
 
     def self.find_all_by_zip(zip)
-
       query = {
         :zip => zip,
         :apikey => Daywalker.api_key
       }
       response = get('/legislators.allForZip.xml', :query => query)
 
-      parse(response.body)
+      handle_response(response)
     end
 
     protected

@@ -45,6 +45,18 @@ describe Daywalker::Legislator do
       end
     end
 
+    describe 'with a bad API key' do
+      setup do
+        #  curl -i "http://services.sunlightlabs.com/api/legislators.allForZip.xml?zip=27511&apikey=redacted" > legislators_by_zip
+        register_uri_with_response 'legislators.allForZip.xml?zip=27511&apikey=redacted', 'legislators_by_zip_bad_api.xml'
+      end
+      it 'should raise bad API key error' do
+        lambda {
+          Daywalker::Legislator.find_all_by_zip 27511
+        }.should raise_error(Daywalker::BadApiKey) 
+      end
+      
+    end
   end
 
   describe 'parsed from XML' do
