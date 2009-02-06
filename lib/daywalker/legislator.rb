@@ -15,6 +15,7 @@ module Daywalker
     element 'crp_id', String
     element 'website_url', String, :tag => 'website'
     element 'fax_number', String, :tag => 'fax'
+    element 'govtrack_id', Integer
     element 'first_name', String, :tag => 'firstname'
     element 'middle_name', String, :tag => 'middlename'
     element 'last_name', String, :tag => 'lastname'

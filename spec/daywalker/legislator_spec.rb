@@ -116,6 +116,7 @@ describe Daywalker::Legislator do
     specify { subject.crp_id.should == 'N00002260' }
     specify { subject.website_url.should == 'http://price.house.gov/' }
     specify { subject.fax_number.should == '202-225-2014' }
+    specify { subject.govtrack_id.should == 400326 }
     specify { subject.first_name.should == 'David' }
     specify { subject.middle_name.should == 'Eugene' }
     specify { subject.last_name.should == 'Price' }
