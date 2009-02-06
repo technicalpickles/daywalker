@@ -14,26 +14,40 @@ describe Daywalker::Legislator do
     Daywalker.api_key = nil
   end
 
-  describe 'find_all_by_zip' do
+  describe 'found by find_all_by_zip' do
 
     describe 'happy path' do
       setup do
         # curl -i "http://services.sunlightlabs.com/api/legislators.allForZip.xml?zip=27511&apikey=8a328abd6ecaa0e335f703c24ef931cc" > legislators_by_zip.xml
         register_uri_with_response 'legislators.allForZip.xml?zip=27511&apikey=redacted', 'legislators_by_zip.xml'
+
+        @legislators = Daywalker::Legislator.find_all_by_zip 27511
       end
 
-      subject { Daywalker::Legislator.find_all_by_zip 27511 }
+      it 'return 4 legislators' do
+        @legislators.size.should == 4
+      end
+      
+      it 'should have first legislator with votesmart id 119' do
+        @legislators[0].votesmart_id.should == 119
+      end
 
-      specify { subject.size.should == 4 }
-      specify { subject[0].votesmart_id.should == 119 }
-      specify { subject[1].votesmart_id.should == 21082 }
-      specify { subject[2].votesmart_id.should == 21787 }
-      specify { subject[3].votesmart_id.should == 10205 }
+      it 'should have second legislator with votesmart id 21082' do
+        @legislators[1].votesmart_id.should == 21082
+      end
+
+      it 'should have third legislator with votesmart id 21787' do
+        @legislators[2].votesmart_id.should == 21787
+      end
+
+      it 'should have fourth legislator with votesmart id 10205' do
+        @legislators[3].votesmart_id.should == 10205
+      end
     end
 
   end
 
-  describe '.parse' do
+  describe 'parsed from XML' do
     setup do
       @xml = <<-XML
         <legislator>
