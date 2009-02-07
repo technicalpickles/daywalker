@@ -4,14 +4,14 @@ module Daywalker
 
     tag 'legislator'
     element 'district_number', Integer, :tag => 'district'
-    element 'title', self, :parser => :title_abbr_to_sym
+    element 'title', TypeConverter, :parser => :title_abbr_to_sym
     element 'eventful_id', String
     element 'in_office', Boolean
     element 'state', String
     element 'votesmart_id', Integer
-    element 'official_rss_url', self, :tag => 'official_rss', :parser => :blank_to_nil
-    element 'party', self, :parser => :party_letter_to_sym
-    element 'email', self, :parser => :blank_to_nil
+    element 'official_rss_url', TypeConverter, :tag => 'official_rss', :parser => :blank_to_nil
+    element 'party', TypeConverter, :parser => :party_letter_to_sym
+    element 'email', TypeConverter, :parser => :blank_to_nil
     element 'crp_id', String
     element 'website_url', String, :tag => 'website'
     element 'fax_number', String, :tag => 'fax'
@@ -23,12 +23,12 @@ module Daywalker
     element 'bioguide_id', String
     element 'webform_url', String, :tag => 'webform'
     element 'youtube_url', String
-    element 'nickname', self, :parser => :blank_to_nil
+    element 'nickname', TypeConverter, :parser => :blank_to_nil
     element 'phone', String
     element 'fec_id', String
-    element 'gender', self, :parser => :gender_letter_to_sym
-    element 'name_suffix', self, :parser => :blank_to_nil
-    element 'twitter_id', self, :parser => :blank_to_nil
+    element 'gender', TypeConverter, :parser => :gender_letter_to_sym
+    element 'name_suffix', TypeConverter, :parser => :blank_to_nil
+    element 'twitter_id', TypeConverter, :parser => :blank_to_nil
     element 'sunlight_old_id', String
     element 'congresspedia_url', String
 
@@ -49,6 +49,7 @@ module Daywalker
       when :all then '/legislators.getList'
       end
 
+      conditions = TypeConverter.convert_conditions(conditions)
       query = conditions.merge(:apikey => Daywalker.api_key)
       response = get(url, :query => query)
 
@@ -56,37 +57,6 @@ module Daywalker
       when :only then handle_response(response).first
       when :all then handle_response(response)
       end
-    end
-
-    protected
-
-    def self.gender_letter_to_sym(letter)
-      case letter
-      when 'M' then :male
-      when 'F' then :female
-      else raise "unknown gender #{letter.inspect}"
-      end
-    end
-
-    def self.party_letter_to_sym(letter)
-      case letter
-      when 'D' then :democrat
-      when 'R' then :republican
-      when 'I' then :independent
-      else raise "Unknown party #{letter.inspect}"
-      end
-    end
-
-    def self.title_abbr_to_sym(abbr)
-      case abbr
-      when 'Sen' then :senator
-      when 'Rep' then :representative
-      else raise "Unknown title #{abbr.inspect}"
-      end
-    end
-
-    def self.blank_to_nil(str)
-      str == '' ? nil : str
     end
   end
 end

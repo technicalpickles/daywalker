@@ -2,6 +2,7 @@ require 'happymapper'
 require 'httparty'
 
 require 'daywalker/base'
+require 'daywalker/type_converter'
 require 'daywalker/district'
 require 'daywalker/legislator'
 

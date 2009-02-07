@@ -85,19 +85,18 @@ describe Daywalker::Legislator do
       describe 'happy path' do
         before do
           # curl -i "http://services.sunlightlabs.com/api/legislators.getList.xml?state=NY&title=Sen&apikey=redacted" > legislators_find_ny_senators.xml
-          register_uri_with_response 'legislators.getList?state=NY&apikey=redacted&title=senator', 'legislators_find_ny_senators.xml'
+          register_uri_with_response 'legislators.getList?state=NY&apikey=redacted&title=Sen', 'legislators_find_ny_senators.xml'
           @legislators = Daywalker::Legislator.find(:all, :state => 'NY', :title => :senator)
         end
 
         it 'should return legislators with votesmart ids 55463 and 26976' do
           @legislators.map{|each| each.votesmart_id}.should == [55463, 26976]
-
         end
       end
 
       describe 'with bad API key' do
         before do
-          register_uri_with_response 'legislators.getList?state=NY&apikey=redacted&title=senator', 'legislators_find_ny_senators_bad_api.xml'
+          register_uri_with_response 'legislators.getList?state=NY&apikey=redacted&title=Sen', 'legislators_find_ny_senators_bad_api.xml'
         end
 
         it 'should raise BadApiKey error' do
