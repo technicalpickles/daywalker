@@ -58,5 +58,25 @@ module Daywalker
       when :all then handle_response(response)
       end
     end
+
+    def self.method_missing(method, *args, &block)
+      if method.to_s =~ /^find_(all_by|by)_([_a-zA-Z]\w*)$/
+        conditions = {}
+        $2.split('_and_').each_with_index do |key, index|
+          conditions[key.to_sym] = args[index]
+        end
+        find(:all, conditions)
+      else
+        super
+      end
+    end
+
+    def self.respond_to?(method)
+      if method.to_s =~ /^find_(all_by|by)_([_a-zA-Z]\w*)$/
+        true
+      else
+        super
+      end
+    end
   end
 end

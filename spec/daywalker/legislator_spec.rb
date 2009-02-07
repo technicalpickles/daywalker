@@ -107,7 +107,22 @@ describe Daywalker::Legislator do
         end
       end
     end
+  end
 
+  describe 'dynamic finder find_all_by_state_and_title' do
+    before do
+      register_uri_with_response 'legislators.getList?state=NY&apikey=redacted&title=Sen', 'legislators_find_ny_senators.xml'
+
+      @legislators = Daywalker::Legislator.find_all_by_state_and_title('NY', :senator)
+    end
+    
+    it 'should return legislators with votesmart ids 55463 and 26976' do
+      @legislators.map{|each| each.votesmart_id}.should == [55463, 26976]
+    end
+    
+    it 'should respond to find_all_by_state_and_title' do
+      Daywalker::Legislator.should respond_to(:find_all_by_state_and_title)
+    end
   end
 
 
