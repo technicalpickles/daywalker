@@ -63,4 +63,15 @@ describe Daywalker::TypeConverter do
     end
   end
 
+  describe 'convert_conditions' do
+    before do
+      @conditions = {:title => :senator}
+    end
+
+    it 'should convert title' do
+      Daywalker::TypeConverter.should_receive(:sym_to_title_abbr).with(:senator)
+      Daywalker::TypeConverter.convert_conditions(@conditions)
+    end
+  end
+
 end
