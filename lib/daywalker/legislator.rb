@@ -51,7 +51,7 @@ module Daywalker
       when :all then '/legislators.getList'
       end
 
-      conditions = TypeConverter.convert_conditions(conditions)
+      conditions = TypeConverter.normalize_conditions(conditions)
       query = conditions.merge(:apikey => Daywalker.api_key)
       response = get(url, :query => query)
 

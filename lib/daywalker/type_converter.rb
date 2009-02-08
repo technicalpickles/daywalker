@@ -46,7 +46,7 @@ module Daywalker
       str == '' ? nil : str
     end
 
-    def self.convert_conditions(conditions)
+    def self.normalize_conditions(conditions)
       if conditions[:title].kind_of? Symbol
         conditions[:title] = sym_to_title_abbr(conditions[:title])
       end

@@ -99,35 +99,35 @@ describe Daywalker::TypeConverter do
     end
   end
 
-  describe 'convert_conditions' do
+  describe 'normalize_conditions' do
     before do
       @conditions = {:title => :senator, :district_number => 5, :official_rss_url => 'http://zomg.com/index.rss', :party => :democrat}
     end
 
     it 'should convert title value' do
       Daywalker::TypeConverter.should_receive(:sym_to_title_abbr).with(:senator)
-      Daywalker::TypeConverter.convert_conditions(@conditions)
+      Daywalker::TypeConverter.normalize_conditions(@conditions)
     end
 
     it 'should copy district_number value to district' do
-      Daywalker::TypeConverter.convert_conditions(@conditions)[:district].should == 5
+      Daywalker::TypeConverter.normalize_conditions(@conditions)[:district].should == 5
     end
 
     it 'should remove district_number value' do
-      Daywalker::TypeConverter.convert_conditions(@conditions).should_not have_key(:district_number)
+      Daywalker::TypeConverter.normalize_conditions(@conditions).should_not have_key(:district_number)
     end
 
     it 'should copy official_rss_url value to official_rss' do
-      Daywalker::TypeConverter.convert_conditions(@conditions)[:official_rss].should == 'http://zomg.com/index.rss'
+      Daywalker::TypeConverter.normalize_conditions(@conditions)[:official_rss].should == 'http://zomg.com/index.rss'
     end
 
     it 'should remove official_rss_url value' do
-      Daywalker::TypeConverter.convert_conditions(@conditions).should_not have_key(:official_rss_url)
+      Daywalker::TypeConverter.normalize_conditions(@conditions).should_not have_key(:official_rss_url)
     end
 
     it 'should convert party value' do
       Daywalker::TypeConverter.should_receive(:sym_to_party_letter).with(:democrat)
-      Daywalker::TypeConverter.convert_conditions(@conditions)
+      Daywalker::TypeConverter.normalize_conditions(@conditions)
     end
 
   end
