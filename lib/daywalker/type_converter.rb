@@ -29,7 +29,16 @@ module Daywalker
       case sym
       when :senator then 'Sen'
       when :representative then 'Rep'
-      else raise "Unknown title #{abbr.inspect}"
+      else raise ArgumentError, "Unknown title #{sym.inspect}"
+      end
+    end
+
+    def self.sym_to_party_letter(sym)
+      case sym
+      when :democrat then 'D'
+      when :republican then 'R'
+      when :independent then 'I'
+      else raise ArgumentError, "Unknown party #{sym.inspect}"
       end
     end
 
@@ -41,6 +50,19 @@ module Daywalker
       if conditions[:title].kind_of? Symbol
         conditions[:title] = sym_to_title_abbr(conditions[:title])
       end
+
+      if conditions.has_key? :district_number
+        conditions[:district] = conditions.delete(:district_number)
+      end
+
+      if conditions.has_key? :official_rss_url
+        conditions[:official_rss] = conditions.delete(:official_rss_url)
+      end
+
+      if conditions[:party].kind_of? Symbol
+        conditions[:party] = sym_to_party_letter(conditions[:party])
+      end
+
       conditions
     end
   end
