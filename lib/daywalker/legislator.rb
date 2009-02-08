@@ -64,6 +64,7 @@ module Daywalker
     def self.method_missing(method_id, *args, &block)
       match = DynamicFinderMatch.new(method_id)
       if match.match?
+        # TODO define the method, and invoke it, so we don't have to muck with building conditions here
         conditions = {}
         match.attribute_names.each_with_index do |key, index|
           conditions[key.to_sym] = args[index]
