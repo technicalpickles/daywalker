@@ -32,6 +32,8 @@ module Daywalker
     element 'sunlight_old_id', String
     element 'congresspedia_url', String
 
+    VALID_ATTRIBUTES = [:district_number, :title, :eventful_id, :in_office, :state, :votesmart_id, :official_rss_url, :party, :email, :crp_id, :website_url, :fax_number, :govtrack_id, :first_name, :middle_name, :last_name, :congress_office, :bioguide_id, :webform_url, :youtube_url, :nickname, :phone, :fec_id, :gender, :name_suffix, :twitter_id, :sunlight_old_id, :congresspedia_url]
+
     def self.find_all_by_zip(zip)
       raise MissingParameter, 'zip' if zip.nil?
       query = {
@@ -59,10 +61,11 @@ module Daywalker
       end
     end
 
-    def self.method_missing(method, *args, &block)
-      if method.to_s =~ /^find_(all_by|by)_([_a-zA-Z]\w*)$/
+    def self.method_missing(method_id, *args, &block)
+      match = DynamicFinderMatch.new(method_id)
+      if match.match?
         conditions = {}
-        $2.split('_and_').each_with_index do |key, index|
+        match.attribute_names.each_with_index do |key, index|
           conditions[key.to_sym] = args[index]
         end
         find(:all, conditions)
@@ -71,8 +74,9 @@ module Daywalker
       end
     end
 
-    def self.respond_to?(method)
-      if method.to_s =~ /^find_(all_by|by)_([_a-zA-Z]\w*)$/
+    def self.respond_to?(method_id)
+      match = DynamicFinderMatch.new(method_id)
+      if match.match?
         true
       else
         super
