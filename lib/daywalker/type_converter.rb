@@ -4,7 +4,7 @@ module Daywalker
       case letter
       when 'M' then :male
       when 'F' then :female
-      else raise "unknown gender #{letter.inspect}"
+      else raise ArgumentError, "unknown gender #{letter.inspect}"
       end
     end
 
@@ -13,7 +13,7 @@ module Daywalker
       when 'D' then :democrat
       when 'R' then :republican
       when 'I' then :independent
-      else raise "Unknown party #{letter.inspect}"
+      else raise ArgumentError, "unknown party #{letter.inspect}"
       end
     end
 
@@ -21,7 +21,7 @@ module Daywalker
       case abbr
       when 'Sen' then :senator
       when 'Rep' then :representative
-      else raise "Unknown title #{abbr.inspect}"
+      else raise ArgumentError, "Unknown title #{abbr.inspect}"
       end
     end
 
