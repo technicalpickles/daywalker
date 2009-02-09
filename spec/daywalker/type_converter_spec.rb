@@ -89,6 +89,22 @@ describe Daywalker::TypeConverter do
     end
   end
 
+  describe 'sym_to_gender_letter' do
+    it 'should convert :male to M' do
+      Daywalker::TypeConverter.sym_to_gender_letter(:male).should == 'M'
+    end
+
+    it 'should convert :female to F' do
+      Daywalker::TypeConverter.sym_to_gender_letter(:female).should == 'F'
+    end
+
+    it 'should raise ArgumentError for unknown genders' do
+      lambda {
+        Daywalker::TypeConverter.sym_to_gender_letter(:zomg)
+      }.should raise_error(ArgumentError)
+    end
+  end
+
   describe 'blank_to_nil' do
     it 'should convert "" to nil' do
       Daywalker::TypeConverter.blank_to_nil('').should be_nil
@@ -109,7 +125,10 @@ describe Daywalker::TypeConverter do
         :website_url => 'http://zomg.com',
         :fax_number => '1800vote4me',
         :first_name => 'John',
-        :last_name => 'Doe'
+        :middle_name => 'Q',
+        :last_name => 'Doe',
+        :webform_url => 'http://zomg.com/contact',
+        :gender => :male
       }
     end
 
@@ -163,12 +182,33 @@ describe Daywalker::TypeConverter do
       Daywalker::TypeConverter.normalize_conditions(@conditions).should_not have_key(:first_name)
     end
 
+    it 'should copy middle_name value to middlename' do
+      Daywalker::TypeConverter.normalize_conditions(@conditions)[:middlename].should == 'Q'
+    end
+
+    it 'should remove middle_name value' do
+      Daywalker::TypeConverter.normalize_conditions(@conditions).should_not have_key(:middle_name)
+    end
+
     it 'should copy last_name value to lastname' do
       Daywalker::TypeConverter.normalize_conditions(@conditions)[:lastname].should == 'Doe'
     end
 
     it 'should remove last_name value' do
       Daywalker::TypeConverter.normalize_conditions(@conditions).should_not have_key(:last_name)
+    end
+
+    it 'should copy webform_url value to webform' do
+      Daywalker::TypeConverter.normalize_conditions(@conditions)[:webform].should == 'http://zomg.com/contact'
+    end
+
+    it 'should remove webform_url value' do
+      Daywalker::TypeConverter.normalize_conditions(@conditions).should_not have_key(:webform_url)
+    end
+
+    it 'should convert gender value' do
+      Daywalker::TypeConverter.should_receive(:sym_to_gender_letter).with(:male)
+      Daywalker::TypeConverter.normalize_conditions(@conditions)
     end
   end
 

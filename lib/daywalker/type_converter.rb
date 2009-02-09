@@ -42,6 +42,14 @@ module Daywalker
       end
     end
 
+    def self.sym_to_gender_letter(sym)
+      case sym
+      when :male then 'M'
+      when :female then 'F'
+      else raise ArgumentError, "Unknown gender #{sym.inspect}"
+      end
+    end
+
     def self.blank_to_nil(str)
       str == '' ? nil : str
     end
@@ -61,7 +69,13 @@ module Daywalker
       move_value_in_hash(conditions, :website_url, :website)
       move_value_in_hash(conditions, :fax_number, :fax)
       move_value_in_hash(conditions, :first_name, :firstname)
+      move_value_in_hash(conditions, :middle_name, :middlename)
       move_value_in_hash(conditions, :last_name, :lastname)
+      move_value_in_hash(conditions, :webform_url, :webform)
+
+      if conditions[:gender].kind_of? Symbol
+        conditions[:gender] = sym_to_gender_letter(conditions[:gender])
+      end
 
       conditions
     end
