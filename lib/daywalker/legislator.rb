@@ -65,12 +65,8 @@ module Daywalker
     def self.method_missing(method_id, *args, &block)
       match = DynamicFinderMatch.new(method_id)
       if match.match?
-        # TODO define the method, and invoke it, so we don't have to muck with building conditions here
-        conditions = {}
-        match.attribute_names.each_with_index do |key, index|
-          conditions[key.to_sym] = args[index]
-        end
-        find(:all, conditions)
+        create_finder_method(method_id, match.finder, match.attribute_names)
+        send(method_id, *args, &block)
       else
         super
       end
@@ -83,6 +79,20 @@ module Daywalker
       else
         super
       end
+    end
+
+    protected
+
+    def self.create_finder_method(method, finder, attribute_names)
+      class_eval %{
+        def self.#{method}(*args)                                             # def self.find_all_by_district_number_and_state(*args)
+          conditions = args.last.kind_of?(Hash) ? args.pop : {}               #   conditions = args.last.kind_of?(Hash) ? args.pop : {}
+          [:#{attribute_names.join(', :')}].each_with_index do |key, index|   #   [:district_number, :state].each_with_index do |key, index|
+            conditions[key] = args[index]                                     #     conditions[key] = args[index]
+          end                                                                 #   end
+          find(#{finder.inspect}, conditions)                                 #   find(:all, conditions)
+        end                                                                   # end
+      }
     end
   end
 end

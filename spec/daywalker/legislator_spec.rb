@@ -116,6 +116,7 @@ describe Daywalker::Legislator do
     end
   end
 
+  # TODO switch this to mocking
   describe 'dynamic finder find_all_by_state_and_title' do
     before do
       register_uri_with_response 'legislators.getList?state=NY&apikey=redacted&title=Sen', 'legislators_find_ny_senators.xml'
