@@ -101,7 +101,16 @@ describe Daywalker::TypeConverter do
 
   describe 'normalize_conditions' do
     before do
-      @conditions = {:title => :senator, :district_number => 5, :official_rss_url => 'http://zomg.com/index.rss', :party => :democrat}
+      @conditions = {
+        :title => :senator,
+        :district_number => 5,
+        :official_rss_url => 'http://zomg.com/index.rss',
+        :party => :democrat,
+        :website_url => 'http://zomg.com',
+        :fax_number => '1800vote4me',
+        :first_name => 'John',
+        :last_name => 'Doe'
+      }
     end
 
     it 'should convert title value' do
@@ -130,6 +139,37 @@ describe Daywalker::TypeConverter do
       Daywalker::TypeConverter.normalize_conditions(@conditions)
     end
 
+    it 'should copy website_url value to website' do
+      Daywalker::TypeConverter.normalize_conditions(@conditions)[:website].should == 'http://zomg.com'
+    end
+
+    it 'should remove website_url value' do
+      Daywalker::TypeConverter.normalize_conditions(@conditions).should_not have_key(:website_url)
+    end
+
+    it 'should copy fax_number value to fax' do
+      Daywalker::TypeConverter.normalize_conditions(@conditions)[:fax].should == '1800vote4me'
+    end
+
+    it 'should remove fax_number value' do
+      Daywalker::TypeConverter.normalize_conditions(@conditions).should_not have_key(:fax_number)
+    end
+
+    it 'should copy first_name value to firstname' do
+      Daywalker::TypeConverter.normalize_conditions(@conditions)[:firstname].should == 'John'
+    end
+
+    it 'should remove first_name value' do
+      Daywalker::TypeConverter.normalize_conditions(@conditions).should_not have_key(:first_name)
+    end
+
+    it 'should copy last_name value to lastname' do
+      Daywalker::TypeConverter.normalize_conditions(@conditions)[:lastname].should == 'Doe'
+    end
+
+    it 'should remove last_name value' do
+      Daywalker::TypeConverter.normalize_conditions(@conditions).should_not have_key(:last_name)
+    end
   end
 
 end

@@ -51,19 +51,27 @@ module Daywalker
         conditions[:title] = sym_to_title_abbr(conditions[:title])
       end
 
-      if conditions.has_key? :district_number
-        conditions[:district] = conditions.delete(:district_number)
-      end
-
-      if conditions.has_key? :official_rss_url
-        conditions[:official_rss] = conditions.delete(:official_rss_url)
-      end
+      move_value_in_hash(conditions, :district_number, :district)
+      move_value_in_hash(conditions, :official_rss_url, :official_rss)
 
       if conditions[:party].kind_of? Symbol
         conditions[:party] = sym_to_party_letter(conditions[:party])
       end
 
+      move_value_in_hash(conditions, :website_url, :website)
+      move_value_in_hash(conditions, :fax_number, :fax)
+      move_value_in_hash(conditions, :first_name, :firstname)
+      move_value_in_hash(conditions, :last_name, :lastname)
+
       conditions
+    end
+
+    protected
+
+    def self.move_value_in_hash(hash, from, to)
+      if hash.has_key? from
+        hash[to] = hash.delete(from)
+      end
     end
   end
 end
