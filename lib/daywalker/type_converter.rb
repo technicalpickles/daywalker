@@ -1,5 +1,5 @@
 module Daywalker
-  class TypeConverter
+  class TypeConverter # :nodoc:
     def self.gender_letter_to_sym(letter)
       case letter
       when 'M' then :male
