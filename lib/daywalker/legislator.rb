@@ -49,6 +49,7 @@ module Daywalker
       url = case sym
       when :one then '/legislators.get'
       when :all then '/legislators.getList'
+      else raise ArgumentError, "invalid argument #{sym.inspect}, only :one and :all are allowed"
       end
 
       conditions = TypeConverter.normalize_conditions(conditions)

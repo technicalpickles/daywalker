@@ -77,7 +77,6 @@ describe Daywalker::Legislator do
         end
       end
     end
-
   end
 
   describe 'found with find(:all)' do
@@ -106,6 +105,14 @@ describe Daywalker::Legislator do
 
         end
       end
+    end
+  end
+
+  describe 'found with find(:zomg)' do
+    it 'should raise ArgumentError' do
+      lambda {
+        Daywalker::Legislator.find(:zomg, {})
+      }.should raise_error(ArgumentError, /zomg/)
     end
   end
 
