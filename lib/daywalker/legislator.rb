@@ -1,4 +1,32 @@
 module Daywalker
+  # Represents a legislator, either a Senator or Representative.
+  #
+  # They have the following attributes:
+  # * district_number
+  # * title (ether :senator or :representative)
+  # * eventful_id (on http://eventful.com)
+  # * in_office (true or false)
+  # * state (two-letter abbreviation)
+  # * votesmart_id (on http://www.votesmart.org)
+  # * party (:democrat, :republican, or :independent)
+  # * crp_id (on http://opensecrets.org)
+  # * website_url
+  # * fax_number
+  # * govtrack_id (on http://www.govtrack.us)
+  # * first_name
+  # * middle_name
+  # * last_name
+  # * congress_office (address in Washington, DC)
+  # * bioguide_id (on http://bioguide.congress.gov)
+  # * webform_url
+  # * youtube_url
+  # * nickname
+  # * phone
+  # * fec_id (on http://fec.gov)
+  # * gender (:male or :female)
+  # * name_suffix
+  # * twitter_id (on http://twitter.com)
+  # * congresspedia_url
   class Legislator < Base
     include HappyMapper
 
@@ -34,6 +62,7 @@ module Daywalker
 
     VALID_ATTRIBUTES = [:district_number, :title, :eventful_id, :in_office, :state, :votesmart_id, :official_rss_url, :party, :email, :crp_id, :website_url, :fax_number, :govtrack_id, :first_name, :middle_name, :last_name, :congress_office, :bioguide_id, :webform_url, :youtube_url, :nickname, :phone, :fec_id, :gender, :name_suffix, :twitter_id, :sunlight_old_id, :congresspedia_url]
 
+    # Find all legislators in a particular zip code
     def self.find_all_by_zip(zip)
       raise MissingParameter, 'zip' if zip.nil?
       query = {
@@ -45,6 +74,21 @@ module Daywalker
       handle_response(response)
     end
 
+    # Find one or many legislators, based on a set of conditions. See 
+    # VALID_ATTRIBUTES for possible attributes you can search for.
+    # 
+    # If you want one legislators, and you expect there is exactly one legislator, use :one. An error will be raised if there are more than one result.
+    #
+    #   Daywalker::Legislator.find(:one, :state => 'NY', :district => 4)
+    #
+    # Otherwise, use :all.
+    # 
+    #   Daywalker::Legislator.find(:all, :state => 'NY', :title => :senator)
+    #
+    # Additionally, dynamic finders based on these attributes are available:
+    #
+    #   Daywalker::Legislator.find_by_state_and_district('NY', 4)
+    #   Daywalker::Legislator.find_all_by_state_and_senator('NY', :senator)
     def self.find(sym, conditions)
       url = case sym
       when :one then '/legislators.get'
@@ -62,7 +106,7 @@ module Daywalker
       end
     end
 
-    def self.method_missing(method_id, *args, &block)
+    def self.method_missing(method_id, *args, &block) # :nodoc:
       match = DynamicFinderMatch.new(method_id)
       if match.match?
         create_finder_method(method_id, match.finder, match.attribute_names)
@@ -72,7 +116,8 @@ module Daywalker
       end
     end
 
-    def self.respond_to?(method_id)
+    
+    def self.respond_to?(method_id) # :nodoc:
       match = DynamicFinderMatch.new(method_id)
       if match.match?
         true
@@ -83,7 +128,8 @@ module Daywalker
 
     protected
 
-    def self.create_finder_method(method, finder, attribute_names)
+    
+    def self.create_finder_method(method, finder, attribute_names) # :nodoc:
       class_eval %{
         def self.#{method}(*args)                                             # def self.find_all_by_district_number_and_state(*args)
           conditions = args.last.kind_of?(Hash) ? args.pop : {}               #   conditions = args.last.kind_of?(Hash) ? args.pop : {}

@@ -1,5 +1,5 @@
 module Daywalker
-  class Base
+  class Base # :nodoc:
     include HTTParty
     base_uri 'http://services.sunlightlabs.com/api'
 
