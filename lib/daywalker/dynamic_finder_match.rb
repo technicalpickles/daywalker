@@ -6,7 +6,7 @@ module Daywalker
        when /^find_(all_by|by)_([_a-zA-Z]\w*)$/
          @finder = case $1
                    when 'all_by' then :all
-                   when 'by' then :only
+                   when 'by' then :one
                    end
          @attribute_names = $2.split('_and_').map {|each| each.to_sym}
       end

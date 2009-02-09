@@ -51,12 +51,12 @@ describe Daywalker::Legislator do
     end
   end
 
-  describe 'found with find(:only)' do
+  describe 'found with find(:one)' do
     describe 'by state and district, with one result,' do
       describe 'happy path' do
         before do
           register_uri_with_response 'legislators.get?apikey=redacted&state=NY&district=4', 'legislators_find_by_ny_district_4.xml'
-          @legislator = Daywalker::Legislator.find(:only, :state => 'NY', :district => 4)
+          @legislator = Daywalker::Legislator.find(:one, :state => 'NY', :district => 4)
         end
 
 
@@ -72,7 +72,7 @@ describe Daywalker::Legislator do
 
         it 'should raise a missing parameter error for zip' do
           lambda {
-            Daywalker::Legislator.find(:only, :state => 'NY', :district => 4)
+            Daywalker::Legislator.find(:one, :state => 'NY', :district => 4)
           }.should raise_error(Daywalker::BadApiKey) 
         end
       end

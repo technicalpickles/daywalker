@@ -26,8 +26,8 @@ describe Daywalker::DynamicFinderMatch do
     specify 'should have :govtrack_id attribute' do
       subject.attribute_names.should == [:govtrack_id]
     end
-    specify 'should have :only finder' do
-      subject.finder.should == :only
+    specify 'should have :one finder' do
+      subject.finder.should == :one
     end
   end
 end
