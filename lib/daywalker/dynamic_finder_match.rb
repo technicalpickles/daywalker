@@ -1,6 +1,6 @@
 module Daywalker
-  # :nodoc:
-  class DynamicFinderMatch
+  
+  class DynamicFinderMatch # :nodoc:
     attr_accessor :finder, :attribute_names
     def initialize(method)
       case method.to_s
