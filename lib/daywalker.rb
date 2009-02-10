@@ -20,8 +20,4 @@ module Daywalker
   # Error for when you use the API with a bad API key
   class BadApiKey < StandardError
   end
-
-  # TODO remove
-  class MissingParameter < StandardError
-  end
 end

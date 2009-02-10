@@ -14,7 +14,7 @@ module Daywalker
     # Find districts by latitude and longitude.
     def self.find_by_latlng(lat, lng)
       # TODO use ArgumentError
-      raise(MissingParameter, 'latitude') if lat.nil?
+      raise(ArgumentError, 'missing required parameter latitude') if lat.nil?
 
       query = {
         :latitude => lat,
@@ -28,7 +28,7 @@ module Daywalker
     # Find districts by zip code
     def self.find_by_zip(zip)
       # TODO use ArgumentError
-      raise(MissingParameter, 'zip') if zip.nil?
+      raise(ArgumentError, 'missing required parameter zip') if zip.nil?
 
       query = {
         :zip => zip,

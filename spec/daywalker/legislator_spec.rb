@@ -43,10 +43,10 @@ describe Daywalker::Legislator do
     end
 
     describe 'without a zip code' do
-      it 'should raise a missing parameter error for zip' do
+      it 'should raise ArgumentError for missing zip' do
         lambda {
           Daywalker::Legislator.find_all_by_zip nil
-        }.should raise_error(Daywalker::MissingParameter, 'zip') 
+        }.should raise_error(ArgumentError, /zip/) 
       end
     end
   end

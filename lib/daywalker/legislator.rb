@@ -64,7 +64,7 @@ module Daywalker
 
     # Find all legislators in a particular zip code
     def self.find_all_by_zip(zip)
-      raise MissingParameter, 'zip' if zip.nil?
+      raise ArgumentError, 'missing required parameter zip' if zip.nil?
       query = {
         :zip => zip,
         :apikey => Daywalker.api_key
