@@ -91,8 +91,8 @@ module Daywalker
     #   Daywalker::Legislator.find_all_by_state_and_senator('NY', :senator)
     def self.find(sym, conditions)
       url = case sym
-      when :one then '/legislators.get'
-      when :all then '/legislators.getList'
+      when :one then '/legislators.get.xml'
+      when :all then '/legislators.getList.xml'
       else raise ArgumentError, "invalid argument #{sym.inspect}, only :one and :all are allowed"
       end
 

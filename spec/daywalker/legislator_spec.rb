@@ -55,7 +55,7 @@ describe Daywalker::Legislator do
     describe 'by state and district, with one result,' do
       describe 'happy path' do
         before do
-          register_uri_with_response 'legislators.get?apikey=redacted&state=NY&district=4', 'legislators_find_by_ny_district_4.xml'
+          register_uri_with_response 'legislators.get.xml?apikey=redacted&state=NY&district=4', 'legislators_find_by_ny_district_4.xml'
           @legislator = Daywalker::Legislator.find(:one, :state => 'NY', :district => 4)
         end
 
@@ -67,7 +67,7 @@ describe Daywalker::Legislator do
 
       describe 'by state and district, with bad API key' do
         before do
-          register_uri_with_response 'legislators.get?apikey=redacted&state=NY&district=4', 'legislators_find_by_ny_district_4_bad_api.xml'
+          register_uri_with_response 'legislators.get.xml?apikey=redacted&state=NY&district=4', 'legislators_find_by_ny_district_4_bad_api.xml'
         end
 
         it 'should raise a missing parameter error for zip' do
@@ -84,7 +84,7 @@ describe Daywalker::Legislator do
       describe 'happy path' do
         before do
           # curl -i "http://services.sunlightlabs.com/api/legislators.getList.xml?state=NY&title=Sen&apikey=redacted" > legislators_find_ny_senators.xml
-          register_uri_with_response 'legislators.getList?state=NY&apikey=redacted&title=Sen', 'legislators_find_ny_senators.xml'
+          register_uri_with_response 'legislators.getList.xml?state=NY&apikey=redacted&title=Sen', 'legislators_find_ny_senators.xml'
           @legislators = Daywalker::Legislator.find(:all, :state => 'NY', :title => :senator)
         end
 
@@ -95,7 +95,7 @@ describe Daywalker::Legislator do
 
       describe 'with bad API key' do
         before do
-          register_uri_with_response 'legislators.getList?state=NY&apikey=redacted&title=Sen', 'legislators_find_ny_senators_bad_api.xml'
+          register_uri_with_response 'legislators.getList.xml?state=NY&apikey=redacted&title=Sen', 'legislators_find_ny_senators_bad_api.xml'
         end
 
         it 'should raise BadApiKey error' do
@@ -119,7 +119,7 @@ describe Daywalker::Legislator do
   # TODO switch this to mocking
   describe 'dynamic finder find_all_by_state_and_title' do
     before do
-      register_uri_with_response 'legislators.getList?state=NY&apikey=redacted&title=Sen', 'legislators_find_ny_senators.xml'
+      register_uri_with_response 'legislators.getList.xml?state=NY&apikey=redacted&title=Sen', 'legislators_find_ny_senators.xml'
 
       @legislators = Daywalker::Legislator.find_all_by_state_and_title('NY', :senator)
     end
