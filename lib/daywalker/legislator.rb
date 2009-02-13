@@ -77,7 +77,9 @@ module Daywalker
     # Find one or many legislators, based on a set of conditions. See 
     # VALID_ATTRIBUTES for possible attributes you can search for.
     # 
-    # If you want one legislators, and you expect there is exactly one legislator, use :one. An error will be raised if there are more than one result.
+    # If you want one legislators, and you expect there is exactly one
+    # legislator, use :one. An error will be raised if there are more than
+    # one result. An ArgumentErrror will be raised if multiple results come back.
     #
     #   Daywalker::Legislator.find(:one, :state => 'NY', :district => 4)
     #
@@ -115,7 +117,6 @@ module Daywalker
         super
       end
     end
-
     
     def self.respond_to?(method_id) # :nodoc:
       match = DynamicFinderMatch.new(method_id)
@@ -128,7 +129,7 @@ module Daywalker
 
     protected
 
-    def self.handle_bad_request(body)
+    def self.handle_bad_request(body) # :nodoc:
       case body
       when "Multiple Legislators Returned" then raise(ArgumentError, "The conditions provided returned multiple results, by only one is expected")
       else super
