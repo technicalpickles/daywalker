@@ -128,6 +128,13 @@ module Daywalker
 
     protected
 
+    def self.handle_bad_request(body)
+      case body
+      when "Multiple Legislators Returned" then raise(ArgumentError, "The conditions provided returned multiple results, by only one is expected")
+      else super
+      end
+    end
+
     
     def self.create_finder_method(method, finder, attribute_names) # :nodoc:
       class_eval %{

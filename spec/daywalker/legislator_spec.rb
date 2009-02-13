@@ -76,6 +76,18 @@ describe Daywalker::Legislator do
           }.should raise_error(Daywalker::BadApiKey) 
         end
       end
+
+      describe 'by state and district, with multiple results' do
+        before do
+          register_uri_with_response 'legislators.get.xml?state=NY&title=Sen&apikey=redacted', 'legislators_find_one_by_ny_senators.xml'
+        end
+
+        it 'should raise an error about multiple legislators returned' do
+          lambda {
+            Daywalker::Legislator.find(:one, :state => 'NY', :title => :senator)
+          }.should raise_error(ArgumentError, "The conditions provided returned multiple results, by only one is expected")
+        end
+      end
     end
   end
 

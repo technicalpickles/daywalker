@@ -12,6 +12,7 @@ module Daywalker
   def self.api_key=(api_key)
     @api_key = api_key
   end
+
   # Get the API to be used
   def self.api_key
     @api_key

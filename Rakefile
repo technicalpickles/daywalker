@@ -24,15 +24,15 @@ Rake::RDocTask.new do |rdoc|
 end
 
 require 'spec/rake/spectask'
-Spec::Rake::SpecTask.new(:spec) do |t|
-  t.libs << 'lib' << 'spec'
-  t.spec_files = FileList['spec/**/*_spec.rb']
+Spec::Rake::SpecTask.new(:spec) do |spec|
+  spec.libs << 'lib' << 'spec'
+  spec.spec_files = FileList['spec/**/*_spec.rb']
 end
 
-Spec::Rake::SpecTask.new(:rcov) do |t|
-  t.libs << 'lib' << 'spec'
-  t.spec_files = FileList['spec/**/*_spec.rb']
-  t.rcov = true
+Spec::Rake::SpecTask.new(:rcov) do |spec|
+  spec.libs << 'lib' << 'spec'
+  spec.spec_files = FileList['spec/**/*_spec.rb']
+  spec.rcov = true
 end
 
 begin
