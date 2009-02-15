@@ -11,6 +11,7 @@ begin
     gem.authors = ["Josh Nichols"]
     gem.add_dependency 'happymapper', '>= 0.2.2'
     gem.add_dependency 'httparty', '>= 0.3.0'
+    gem.add_dependency 'graticule', '>= 0.2.8'
   end
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"

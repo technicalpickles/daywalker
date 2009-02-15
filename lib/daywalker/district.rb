@@ -38,5 +38,10 @@ module Daywalker
       handle_response(response)
     end
 
+    def self.find_by_address(address)
+      location = Daywalker.geocoder.locate(address)
+
+      find_by_latitude_and_longitude(location[:latitude], location[:longitude])
+    end
   end
 end

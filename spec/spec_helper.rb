@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'spec'
+require 'yaml'
 require 'fake_web'
 
 $LOAD_PATH.unshift(File.dirname(__FILE__))
@@ -30,4 +31,8 @@ end
 
 def register_uri_with_response(uri, response)
   FakeWeb.register_uri("http://services.sunlightlabs.com/api/#{uri}", :response => fixture_path_for(response))
+end
+
+def yaml_fixture(name)
+  YAML::load_file File.join(File.dirname(__FILE__), 'fixtures', name)
 end

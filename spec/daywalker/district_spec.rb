@@ -86,5 +86,27 @@ describe Daywalker::District do
 
     end
   end
+
+  describe 'find_by_address' do
+    describe 'happy path' do
+      before do
+        Daywalker.geocoder.stub!(:locate).with("110 8th St., Troy, NY 12180").and_return({:longitude => -73.684236, :latitude => 42.731245})
+
+        Daywalker::District.stub!(:find_by_latitude_and_longitude).with(42.731245, -73.684236)
+      end
+
+      it 'should use find_by_latitude_and_longitude' do
+        Daywalker::District.should_receive(:find_by_latitude_and_longitude).with(42.731245, -73.684236)
+
+        Daywalker::District.find_by_address("110 8th St., Troy, NY 12180")
+      end
+
+      it 'should use the geocoder to locate a latitude and longitude' do
+        Daywalker.geocoder.should_receive(:locate).with("110 8th St., Troy, NY 12180").and_return({:longitude => -73.684236, :latitude => 42.731245})
+        Daywalker::District.find_by_address("110 8th St., Troy, NY 12180")
+      end
+
+    end
+  end
 end
 
