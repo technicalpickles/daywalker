@@ -22,7 +22,7 @@ module Daywalker
         :apikey => Daywalker.api_key
       }
       response = get('/districts.getDistrictFromLatLong.xml', :query => query)
-      handle_response(response) # TODO should only ever return one?
+      handle_response(response).first
     end
 
     # Find districts by zip code

@@ -1,5 +1,6 @@
 module Daywalker
   class Geocoder
+
     def locate(address)
       location = geocoder.locate(address)
       { :longitude => location.longitude, :latitude => location.latitude }

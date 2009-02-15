@@ -11,9 +11,8 @@ describe Daywalker::District do
 
       subject { Daywalker::District.find_by_latitude_and_longitude(40.739157, -73.990929) } 
 
-      specify { subject.size == 1 }
-      specify { subject.first.state.should == 'NY' }
-      specify { subject.first.number.should == 14 }
+      specify { subject.state.should == 'NY' }
+      specify { subject.number.should == 14 }
     end
 
     describe 'bad api key' do
@@ -105,7 +104,6 @@ describe Daywalker::District do
         Daywalker.geocoder.should_receive(:locate).with("110 8th St., Troy, NY 12180").and_return({:longitude => -73.684236, :latitude => 42.731245})
         Daywalker::District.find_by_address("110 8th St., Troy, NY 12180")
       end
-
     end
   end
 end

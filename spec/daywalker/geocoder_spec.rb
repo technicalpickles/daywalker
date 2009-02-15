@@ -24,7 +24,8 @@ describe Daywalker::Geocoder do
     end
 
     def build_location
-      Graticule::Location.new( :longitude => -73.684236, :latitude => 42.731245)
+      Graticule::Location.new(:longitude => -73.684236, :latitude => 42.731245)
     end
   end
+
 end
