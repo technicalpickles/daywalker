@@ -2,13 +2,15 @@ require 'rake'
 
 begin
   require 'jeweler'
-  Jeweler::Tasks.new do |s|
-    s.name = "daywalker"
-    s.summary = %Q{TODO}
-    s.email = "josh@technicalpickles.com"
-    s.homepage = "http://github.com/technicalpickles/daywalker"
-    s.description = "TODO"
-    s.authors = ["Josh Nichols"]
+  Jeweler::Tasks.new do |gem|
+    gem.name = "daywalker"
+    gem.summary = %Q{TODO}
+    gem.email = "josh@technicalpickles.com"
+    gem.homepage = "http://github.com/technicalpickles/daywalker"
+    gem.description = "TODO"
+    gem.authors = ["Josh Nichols"]
+    gem.add_dependency 'happymapper', '>= 0.2.2'
+    gem.add_dependency 'httparty', '>= 0.3.0'
   end
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
