@@ -6,7 +6,6 @@ describe Daywalker::District do
       before do
         # curl -i "http://services.sunlightlabs.com/api/districts.getDistrictFromLatLong.xml?apikey=urkeyhere&latitude=40.739157&longitude=-73.990929" > districts_by_latlng.xml
         register_uri_with_response 'districts.getDistrictFromLatLong.xml?apikey=redacted&latitude=40.739157&longitude=-73.990929', 'districts_by_latlng.xml'
-
       end
 
       subject { Daywalker::District.find_by_latitude_and_longitude(40.739157, -73.990929) } 

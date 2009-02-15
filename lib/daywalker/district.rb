@@ -11,7 +11,7 @@ module Daywalker
     element 'number', Integer
     element 'state', String
 
-    # Find districts by latitude and longitude.
+    # Find the district for a given latitude and longitude.
     def self.find_by_latitude_and_longitude(latitude, longitude)
       raise(ArgumentError, 'missing required parameter latitude') if latitude.nil?
       raise(ArgumentError, 'missing required parameter longitude') if longitude.nil?
@@ -25,7 +25,7 @@ module Daywalker
       handle_response(response).first
     end
 
-    # Find districts by zip code
+    # Find all districts by zip code
     def self.find_by_zip(zip)
       raise(ArgumentError, 'missing required parameter zip') if zip.nil?
 
