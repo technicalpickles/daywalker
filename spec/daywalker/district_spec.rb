@@ -14,7 +14,7 @@ describe Daywalker::District do
     Daywalker.api_key = nil
   end
 
-  describe 'find_by_latlng' do
+  describe 'find_by_latitude_and_longitude' do
     describe 'happy path' do
       before do
         # curl -i "http://services.sunlightlabs.com/api/districts.getDistrictFromLatLong.xml?apikey=urkeyhere&latitude=40.739157&longitude=-73.990929" > districts_by_latlng.xml
@@ -22,7 +22,7 @@ describe Daywalker::District do
 
       end
 
-      subject { Daywalker::District.find_by_latlng(40.739157, -73.990929) } 
+      subject { Daywalker::District.find_by_latitude_and_longitude(40.739157, -73.990929) } 
 
       specify { subject.size == 1 }
       specify { subject.first.state.should == 'NY' }
@@ -37,7 +37,7 @@ describe Daywalker::District do
 
       specify 'should raise Daywalker::InvalidApiKey' do
         lambda {
-          Daywalker::District.find_by_latlng(40.739157, -73.990929)
+          Daywalker::District.find_by_latitude_and_longitude(40.739157, -73.990929)
         }.should raise_error(Daywalker::BadApiKey)
       end
     end
@@ -50,7 +50,7 @@ describe Daywalker::District do
 
       specify 'should raise ArgumentError for latitude' do
         lambda {
-          Daywalker::District.find_by_latlng(nil, -73.990929)
+          Daywalker::District.find_by_latitude_and_longitude(nil, -73.990929)
         }.should raise_error(ArgumentError, /latitude/)
       end
     end

@@ -12,13 +12,12 @@ module Daywalker
     element 'state', String
 
     # Find districts by latitude and longitude.
-    def self.find_by_latlng(lat, lng)
-      # TODO use ArgumentError
-      raise(ArgumentError, 'missing required parameter latitude') if lat.nil?
+    def self.find_by_latitude_and_longitude(latitude, longitude)
+      raise(ArgumentError, 'missing required parameter latitude') if latitude.nil?
 
       query = {
-        :latitude => lat,
-        :longitude => lng,
+        :latitude => latitude,
+        :longitude => longitude,
         :apikey => Daywalker.api_key
       }
       response = get('/districts.getDistrictFromLatLong.xml', :query => query)
@@ -27,7 +26,6 @@ module Daywalker
 
     # Find districts by zip code
     def self.find_by_zip(zip)
-      # TODO use ArgumentError
       raise(ArgumentError, 'missing required parameter zip') if zip.nil?
 
       query = {
