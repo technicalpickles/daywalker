@@ -14,6 +14,7 @@ module Daywalker
     # Find districts by latitude and longitude.
     def self.find_by_latitude_and_longitude(latitude, longitude)
       raise(ArgumentError, 'missing required parameter latitude') if latitude.nil?
+      raise(ArgumentError, 'missing required parameter longitude') if longitude.nil?
 
       query = {
         :latitude => latitude,

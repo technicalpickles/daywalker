@@ -43,15 +43,18 @@ describe Daywalker::District do
     end
 
     describe 'missing latitude' do
-      setup do
-        # curl -i "http://services.sunlightlabs.com/api/districts.getDistrictFromLatLong.xml?apikey=urkeyhere&longitude=-73.990929" > 'districts_by_latlng_missing_lat.xml'
-        register_uri_with_response('districts.getDistrictFromLatLong.xml?apikey=redacted&longitude=-73.990929', 'districts_by_latlng_missing_lat.xml')
-      end
-
       specify 'should raise ArgumentError for latitude' do
         lambda {
           Daywalker::District.find_by_latitude_and_longitude(nil, -73.990929)
         }.should raise_error(ArgumentError, /latitude/)
+      end
+    end
+
+    describe 'missing longitude' do
+      specify 'should raise ArgumentError for longitude' do
+        lambda {
+          Daywalker::District.find_by_latitude_and_longitude(40.739157, nil)
+        }.should raise_error(ArgumentError, /longitude/)
       end
     end
   end
