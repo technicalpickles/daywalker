@@ -91,11 +91,6 @@ describe Daywalker::District do
     end
 
     describe 'missing zip' do
-      setup do
-        # curl -i "http://services.sunlightlabs.com/api/districts.getDistrictsFromZip.xml?apikey=urkeyhere" > districts_by_zip_missing_zip.xml
-        register_uri_with_response 'districts.getDistrictsFromZip.xml?apikey=redacted', 'districts_by_zip_missing_zip.xml'
-      end
-
       specify 'should raise ArgumentError for missing zip' do
         lambda {
           Daywalker::District.find_by_zip(nil)
