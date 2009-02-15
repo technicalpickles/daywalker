@@ -10,6 +10,18 @@ require 'daywalker'
 FakeWeb.allow_net_connect = false
 
 Spec::Runner.configure do |config|
+  config.before :each do
+    FakeWeb.clean_registry
+  end
+
+  config.before :all do
+    Daywalker.api_key = 'redacted'
+  end
+
+  config.after :all do
+    Daywalker.api_key = nil
+  end
+
 end
 
 def fixture_path_for(response)

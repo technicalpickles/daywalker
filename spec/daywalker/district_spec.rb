@@ -1,19 +1,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Daywalker::District do
-
-  before :each do
-    FakeWeb.clean_registry
-  end
-
-  before :all do
-    Daywalker.api_key = 'redacted'
-  end
-
-  after :all do
-    Daywalker.api_key = nil
-  end
-
   describe 'find_by_latitude_and_longitude' do
     describe 'happy path' do
       before do

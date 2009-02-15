@@ -2,18 +2,6 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Daywalker::Legislator do
 
-  before :each do
-    FakeWeb.clean_registry
-  end
-
-  before :all do
-    Daywalker.api_key = 'redacted'
-  end
-
-  after :all do
-    Daywalker.api_key = nil
-  end
-
   describe 'find_all_by_zip' do
 
     describe 'happy path' do
