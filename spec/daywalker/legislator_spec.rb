@@ -2,8 +2,27 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Daywalker::Legislator do
 
-  describe 'all_by_zip' do
+  describe "John Q. Doe Jr." do
+    before do
+      @legislator = Daywalker::Legislator.new(:first_name => 'John', :middle_name => 'Q.', :last_name => 'Doe', :name_suffix => 'Jr.')
+    end
 
+    specify 'should have correct full name' do
+      @legislator.full_name.should == 'John Q. Doe Jr.'
+    end
+  end
+
+  describe 'Jane Doe' do
+    before do
+      @legislator = Daywalker::Legislator.new(:first_name => 'Jane', :last_name => 'Doe')
+    end
+
+    specify 'should have correct full name' do
+      @legislator.full_name.should == 'Jane Doe'
+    end
+  end
+
+  describe 'all_by_zip' do
     describe 'happy path' do
       setup do
         # curl -i "http://services.sunlightlabs.com/api/legislators.allForZip.xml?zip=27511&apikey=redacted" > legislators_by_zip.xml
@@ -91,7 +110,7 @@ describe Daywalker::Legislator do
   end
 
   describe 'found with all' do
-    describe 'by state and title, with multiple results,' do
+    describe 'by state and title, with multiple results' do
       describe 'happy path' do
         before do
           # curl -i "http://services.sunlightlabs.com/api/legislators.getList.xml?state=NY&title=Sen&apikey=redacted" > legislators_find_ny_senators.xml
@@ -114,6 +133,16 @@ describe Daywalker::Legislator do
             Daywalker::Legislator.all(:state => 'NY', :title => :senator)
           }.should raise_error(Daywalker::BadApiKeyError)
         end
+      end
+    end
+
+    describe 'without any conditions' do
+      before do
+        register_uri_with_response 'legislators.getList.xml?apikey=redacted', 'legislators_all.xml'
+      end
+
+      it 'should work' do
+        @legislators = Daywalker::Legislator.all
       end
     end
   end
@@ -221,7 +250,7 @@ describe Daywalker::Legislator do
           <fax>202-225-2014</fax>
           <govtrack_id>400326</govtrack_id>
           <firstname>David</firstname>
-          <middlename>Eugene</middlename>
+          <middlename></middlename>
           <lastname>Price</lastname>
           <congress_office>2162 Rayburn House Office Building</congress_office>
           <bioguide_id>P000523</bioguide_id>
@@ -255,7 +284,7 @@ describe Daywalker::Legislator do
                             :fax_number => '202-225-2014',
                             :govtrack_id => 400326,
                             :first_name => 'David',
-                            :middle_name => 'Eugene',
+                            :middle_name => nil,
                             :last_name => 'Price',
                             :congress_office => '2162 Rayburn House Office Building',
                             :bioguide_id => 'P000523',

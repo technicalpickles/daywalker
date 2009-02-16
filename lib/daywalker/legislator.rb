@@ -99,7 +99,7 @@ module Daywalker
     element 'fax_number', String, :tag => 'fax'
     element 'govtrack_id', Integer
     element 'first_name', String, :tag => 'firstname'
-    element 'middle_name', String, :tag => 'middlename'
+    element 'middle_name', TypeConverter, :tag => 'middlename', :parser => :blank_to_nil
     element 'last_name', String, :tag => 'lastname'
     element 'congress_office', String
     element 'bioguide_id', String
@@ -115,6 +115,16 @@ module Daywalker
     element 'congresspedia_url', String
 
     VALID_ATTRIBUTES = [:district, :title, :eventful_id, :in_office, :state, :votesmart_id, :official_rss_url, :party, :email, :crp_id, :website_url, :fax_number, :govtrack_id, :first_name, :middle_name, :last_name, :congress_office, :bioguide_id, :webform_url, :youtube_url, :nickname, :phone, :fec_id, :gender, :name_suffix, :twitter_id, :sunlight_old_id, :congresspedia_url]
+
+    def initialize(attributes = {})
+      attributes.each do |attribute, value|
+        send("#{attribute}=", value)
+      end
+    end
+
+    def full_name
+      [first_name, middle_name, last_name, name_suffix].compact.join(' ')
+    end
 
     # Find all Legislators who serve a particular zip code. This would include the Junior and Senior Senators, as well as the Representatives of any Districts in the zip code.
     def self.all_by_zip(zip)
@@ -166,7 +176,7 @@ module Daywalker
     # * Results are exact (Richard vs Rich)
     # * nil attributes will match anything, not legislators without a value for the attribute
     # * Passing an Array of values to match, ie <tt>:state => ['NH', 'MA']</tt> is not supported at this time
-    def self.all(conditions)
+    def self.all(conditions = {})
       conditions = TypeConverter.normalize_conditions(conditions)
       query = conditions.merge(:apikey => Daywalker.api_key)
 
