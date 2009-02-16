@@ -63,7 +63,7 @@ module Daywalker
     VALID_ATTRIBUTES = [:district, :title, :eventful_id, :in_office, :state, :votesmart_id, :official_rss_url, :party, :email, :crp_id, :website_url, :fax_number, :govtrack_id, :first_name, :middle_name, :last_name, :congress_office, :bioguide_id, :webform_url, :youtube_url, :nickname, :phone, :fec_id, :gender, :name_suffix, :twitter_id, :sunlight_old_id, :congresspedia_url]
 
     # Find all legislators in a particular zip code
-    def self.find_all_by_zip(zip)
+    def self.all_by_zip(zip)
       raise ArgumentError, 'missing required parameter zip' if zip.nil?
       query = {
         :zip => zip,
@@ -91,29 +91,47 @@ module Daywalker
     #
     #   Daywalker::Legislator.find_by_state_and_district('NY', 4)
     #   Daywalker::Legislator.find_all_by_state_and_senator('NY', :senator)
-    def self.find(sym, conditions)
-      url = case sym
-      when :one then '/legislators.get.xml'
-      when :all then '/legislators.getList.xml'
-      else raise ArgumentError, "invalid argument #{sym.inspect}, only :one and :all are allowed"
-      end
+    #def self.find(sym, conditions)
+      #url = case sym
+      #when :one then '/legislators.get.xml'
+      #when :all then '/legislators.getList.xml'
+      #else raise ArgumentError, "invalid argument #{sym.inspect}, only :one and :all are allowed"
+      #end
 
+      #conditions = TypeConverter.normalize_conditions(conditions)
+      #query = conditions.merge(:apikey => Daywalker.api_key)
+      #response = get(url, :query => query)
+
+      #case sym
+      #when :one then handle_response(response).first
+      #when :all then handle_response(response)
+      #end
+    #end
+
+    def self.unique(conditions)
       conditions = TypeConverter.normalize_conditions(conditions)
       query = conditions.merge(:apikey => Daywalker.api_key)
-      response = get(url, :query => query)
 
-      case sym
-      when :one then handle_response(response).first
-      when :all then handle_response(response)
-      end
+      response = get('/legislators.get.xml', :query => query)
+
+      handle_response(response).first
     end
 
-    def self.find_all_by_latitude_and_longitude(latitude, longitude)
-      district = District.find_by_latitude_and_longitude(latitude, longitude)
+    def self.all(conditions)
+      conditions = TypeConverter.normalize_conditions(conditions)
+      query = conditions.merge(:apikey => Daywalker.api_key)
 
-      representative = find_by_state_and_district(district.state, district.number)
-      junior_senator = find_by_state_and_district(district.state, :junior_seat)
-      senior_senator = find_by_state_and_district(district.state, :senior_seat)
+      response = get('/legislators.getList.xml', :query => query)
+
+      handle_response(response)
+    end
+
+    def self.all_by_latitude_and_longitude(latitude, longitude)
+      district = District.unique_by_latitude_and_longitude(latitude, longitude)
+
+      representative = unique_by_state_and_district(district.state, district.number)
+      junior_senator = unique_by_state_and_district(district.state, :junior_seat)
+      senior_senator = unique_by_state_and_district(district.state, :senior_seat)
 
       {
         :representative => representative,
@@ -122,9 +140,9 @@ module Daywalker
       }
     end
 
-    def self.find_all_by_address(address)
+    def self.all_by_address(address)
       location = Daywalker.geocoder.locate(address)
-      find_all_by_latitude_and_longitude(location[:latitude], location[:longitude])
+      all_by_latitude_and_longitude(location[:latitude], location[:longitude])
     end
 
     def self.method_missing(method_id, *args, &block) # :nodoc:
@@ -158,12 +176,12 @@ module Daywalker
     
     def self.create_finder_method(method, finder, attribute_names) # :nodoc:
       class_eval %{
-        def self.#{method}(*args)                                             # def self.find_all_by_district_and_state(*args)
+        def self.#{method}(*args)                                             # def self.all_by_district_and_state(*args)
           conditions = args.last.kind_of?(Hash) ? args.pop : {}               #   conditions = args.last.kind_of?(Hash) ? args.pop : {}
           [:#{attribute_names.join(', :')}].each_with_index do |key, index|   #   [:district, :state].each_with_index do |key, index|
             conditions[key] = args[index]                                     #     conditions[key] = args[index]
           end                                                                 #   end
-          find(#{finder.inspect}, conditions)                                 #   find(:all, conditions)
+          #{finder}(conditions)                                               #   all(conditions)
         end                                                                   # end
       }
     end

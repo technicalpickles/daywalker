@@ -73,7 +73,7 @@ module Daywalker
     end
 
     def self.normalize_conditions(conditions)
-      if conditions[:district].kind_of?(Symbol)|| conditions[:district].kind_of?(Fixnum)
+      if conditions[:district].kind_of?(Symbol) || conditions[:district].kind_of?(Fixnum)
         conditions[:district] = sym_or_i_to_district(conditions[:district])
       end
 

@@ -4,11 +4,8 @@ module Daywalker
     attr_accessor :finder, :attribute_names
     def initialize(method)
       case method.to_s
-       when /^find_(all_by|by)_([_a-zA-Z]\w*)$/
-         @finder = case $1
-                   when 'all_by' then :all
-                   when 'by' then :one
-                   end
+       when /^(unique|all)_by_([_a-zA-Z]\w*)$/
+         @finder = $1.to_sym
          @attribute_names = $2.split('_and_').map {|each| each.to_sym}
       end
     end

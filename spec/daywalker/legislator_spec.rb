@@ -2,14 +2,14 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Daywalker::Legislator do
 
-  describe 'find_all_by_zip' do
+  describe 'all_by_zip' do
 
     describe 'happy path' do
       setup do
         # curl -i "http://services.sunlightlabs.com/api/legislators.allForZip.xml?zip=27511&apikey=redacted" > legislators_by_zip.xml
         register_uri_with_response 'legislators.allForZip.xml?zip=27511&apikey=redacted', 'legislators_by_zip.xml'
 
-        @legislators = Daywalker::Legislator.find_all_by_zip 27511
+        @legislators = Daywalker::Legislator.all_by_zip 27511
       end
 
       it 'return legislators identified by votersmart ids 119, 21082, 21787, and 10205' do
@@ -25,7 +25,7 @@ describe Daywalker::Legislator do
 
       it 'should raise bad API key error' do
         lambda {
-          Daywalker::Legislator.find_all_by_zip 27511
+          Daywalker::Legislator.all_by_zip 27511
         }.should raise_error(Daywalker::BadApiKey) 
       end
     end
@@ -33,20 +33,19 @@ describe Daywalker::Legislator do
     describe 'without a zip code' do
       it 'should raise ArgumentError for missing zip' do
         lambda {
-          Daywalker::Legislator.find_all_by_zip nil
+          Daywalker::Legislator.all_by_zip nil
         }.should raise_error(ArgumentError, /zip/) 
       end
     end
   end
 
-  describe 'found with find(:one)' do
+  describe 'found with unique' do
     describe 'by state and district, with one result,' do
       describe 'happy path' do
         before do
           register_uri_with_response 'legislators.get.xml?apikey=redacted&state=NY&district=4', 'legislators_find_by_ny_district_4.xml'
-          @legislator = Daywalker::Legislator.find(:one, :state => 'NY', :district => 4)
+          @legislator = Daywalker::Legislator.unique(:state => 'NY', :district => 4)
         end
-
 
         it 'should have votesmart id 119' do
           @legislator.votesmart_id.should == 119
@@ -60,7 +59,7 @@ describe Daywalker::Legislator do
 
         it 'should raise a missing parameter error for zip' do
           lambda {
-            Daywalker::Legislator.find(:one, :state => 'NY', :district => 4)
+            Daywalker::Legislator.unique(:state => 'NY', :district => 4)
           }.should raise_error(Daywalker::BadApiKey) 
         end
       end
@@ -72,20 +71,20 @@ describe Daywalker::Legislator do
 
         it 'should raise an error about multiple legislators returned' do
           lambda {
-            Daywalker::Legislator.find(:one, :state => 'NY', :title => :senator)
+            Daywalker::Legislator.unique(:state => 'NY', :title => :senator)
           }.should raise_error(ArgumentError, "The conditions provided returned multiple results, by only one is expected")
         end
       end
     end
   end
 
-  describe 'found with find(:all)' do
+  describe 'found with all' do
     describe 'by state and title, with multiple results,' do
       describe 'happy path' do
         before do
           # curl -i "http://services.sunlightlabs.com/api/legislators.getList.xml?state=NY&title=Sen&apikey=redacted" > legislators_find_ny_senators.xml
           register_uri_with_response 'legislators.getList.xml?state=NY&apikey=redacted&title=Sen', 'legislators_find_ny_senators.xml'
-          @legislators = Daywalker::Legislator.find(:all, :state => 'NY', :title => :senator)
+          @legislators = Daywalker::Legislator.all(:state => 'NY', :title => :senator)
         end
 
         it 'should return legislators with votesmart ids 55463 and 26976' do
@@ -100,28 +99,19 @@ describe Daywalker::Legislator do
 
         it 'should raise BadApiKey error' do
           lambda {
-            Daywalker::Legislator.find(:all, :state => 'NY', :title => :senator)
+            Daywalker::Legislator.all(:state => 'NY', :title => :senator)
           }.should raise_error(Daywalker::BadApiKey)
-
         end
       end
     end
   end
 
-  describe 'found with find(:zomg)' do
-    it 'should raise ArgumentError' do
-      lambda {
-        Daywalker::Legislator.find(:zomg, {})
-      }.should raise_error(ArgumentError, /zomg/)
-    end
-  end
-
   # TODO switch this to mocking
-  describe 'dynamic finder find_all_by_state_and_title' do
+  describe 'dynamic finder all_by_state_and_title' do
     before do
       register_uri_with_response 'legislators.getList.xml?state=NY&apikey=redacted&title=Sen', 'legislators_find_ny_senators.xml'
 
-      @legislators = Daywalker::Legislator.find_all_by_state_and_title('NY', :senator)
+      @legislators = Daywalker::Legislator.all_by_state_and_title('NY', :senator)
     end
     
     it 'should return legislators with votesmart ids 55463 and 26976' do
@@ -129,50 +119,50 @@ describe Daywalker::Legislator do
     end
     
     it 'should respond to find_all_by_state_and_title' do
-      Daywalker::Legislator.should respond_to(:find_all_by_state_and_title)
+      Daywalker::Legislator.should respond_to(:all_by_state_and_title)
     end
   end
 
-  describe 'find_all_by_latitude_and_longitude' do
+  describe 'all_by_latitude_and_longitude' do
     before do
       @district = mock('district', :state => 'NY', :number => 21)
-      Daywalker::District.stub!(:find_by_latitude_and_longitude).with(42.731245, -73.684236).and_return(@district)
+      Daywalker::District.stub!(:unique_by_latitude_and_longitude).with(42.731245, -73.684236).and_return(@district)
       
       @representative = mock('representative')
       @junior_senator = mock('junior senator')
       @senior_senator = mock('senior senator')
 
-      Daywalker::Legislator.stub!(:find_by_state_and_district).with('NY', 21).and_return(@representative)
-      Daywalker::Legislator.stub!(:find_by_state_and_district).with('NY', :junior_seat).and_return(@junior_senator)
-      Daywalker::Legislator.stub!(:find_by_state_and_district).with('NY', :senior_seat).and_return(@senior_senator)
+      Daywalker::Legislator.stub!(:unique_by_state_and_district).with('NY', 21).and_return(@representative)
+      Daywalker::Legislator.stub!(:unique_by_state_and_district).with('NY', :junior_seat).and_return(@junior_senator)
+      Daywalker::Legislator.stub!(:unique_by_state_and_district).with('NY', :senior_seat).and_return(@senior_senator)
     end
 
     it 'should find district by lat & lng' do
-      Daywalker::District.should_receive(:find_by_latitude_and_longitude).with(42.731245, -73.684236).and_return(@district)
+      Daywalker::District.should_receive(:unique_by_latitude_and_longitude).with(42.731245, -73.684236).and_return(@district)
 
-      Daywalker::Legislator.find_all_by_latitude_and_longitude(42.731245, -73.684236)
+      Daywalker::Legislator.all_by_latitude_and_longitude(42.731245, -73.684236)
     end
 
     it 'should find the representative for the district' do
-      Daywalker::Legislator.should_receive(:find_by_state_and_district).with('NY', 21).and_return(@representative)
+      Daywalker::Legislator.should_receive(:unique_by_state_and_district).with('NY', 21).and_return(@representative)
       
-      Daywalker::Legislator.find_all_by_latitude_and_longitude(42.731245, -73.684236)
+      Daywalker::Legislator.all_by_latitude_and_longitude(42.731245, -73.684236)
     end
 
     it 'should find the junior senator for the state' do
-      Daywalker::Legislator.should_receive(:find_by_state_and_district).with('NY', :junior_seat).and_return(@junior_senator)
+      Daywalker::Legislator.should_receive(:unique_by_state_and_district).with('NY', :junior_seat).and_return(@junior_senator)
 
-      Daywalker::Legislator.find_all_by_latitude_and_longitude(42.731245, -73.684236)
+      Daywalker::Legislator.all_by_latitude_and_longitude(42.731245, -73.684236)
     end
 
     it 'should find the senior senator for the state' do
-      Daywalker::Legislator.should_receive(:find_by_state_and_district).with('NY', :senior_seat).and_return(@senior_senator)
+      Daywalker::Legislator.should_receive(:unique_by_state_and_district).with('NY', :senior_seat).and_return(@senior_senator)
 
-      Daywalker::Legislator.find_all_by_latitude_and_longitude(42.731245, -73.684236)
+      Daywalker::Legislator.all_by_latitude_and_longitude(42.731245, -73.684236)
     end
 
     it 'should return the representative, junior senator, and senior senator' do
-      Daywalker::Legislator.find_all_by_latitude_and_longitude(42.731245, -73.684236).should == {
+      Daywalker::Legislator.all_by_latitude_and_longitude(42.731245, -73.684236).should == {
         :representative => @representative,
         :junior_senator => @junior_senator,
         :senior_senator => @senior_senator
@@ -180,23 +170,23 @@ describe Daywalker::Legislator do
     end
   end
 
-  describe 'find_all_by_address' do
+  describe 'all_by_address' do
     before do
       Daywalker.geocoder.stub!(:locate).with("110 8th St., Troy, NY 12180").and_return({:longitude => -73.684236, :latitude => 42.731245})
 
-      Daywalker::Legislator.stub!(:find_all_by_latitude_and_longitude).with(42.731245, -73.684236)
+      Daywalker::Legislator.stub!(:all_by_latitude_and_longitude).with(42.731245, -73.684236)
     end
 
     it 'should geocode the address' do
       Daywalker.geocoder.should_receive(:locate).with("110 8th St., Troy, NY 12180").and_return({:longitude => -73.684236, :latitude => 42.731245})
 
-      Daywalker::Legislator.find_all_by_address("110 8th St., Troy, NY 12180")
+      Daywalker::Legislator.all_by_address("110 8th St., Troy, NY 12180")
     end
 
     it 'should find legislators by latitude and longitude' do
-      Daywalker::Legislator.should_receive(:find_all_by_latitude_and_longitude).with(42.731245, -73.684236)
+      Daywalker::Legislator.should_receive(:all_by_latitude_and_longitude).with(42.731245, -73.684236)
 
-      Daywalker::Legislator.find_all_by_address("110 8th St., Troy, NY 12180")
+      Daywalker::Legislator.all_by_address("110 8th St., Troy, NY 12180")
     end
 
   end

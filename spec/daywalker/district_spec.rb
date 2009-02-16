@@ -1,14 +1,14 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Daywalker::District do
-  describe 'find_by_latitude_and_longitude' do
+  describe 'unique_by_latitude_and_longitude' do
     describe 'happy path' do
       before do
         # curl -i "http://services.sunlightlabs.com/api/districts.getDistrictFromLatLong.xml?apikey=urkeyhere&latitude=40.739157&longitude=-73.990929" > districts_by_latlng.xml
         register_uri_with_response 'districts.getDistrictFromLatLong.xml?apikey=redacted&latitude=40.739157&longitude=-73.990929', 'districts_by_latlng.xml'
       end
 
-      subject { Daywalker::District.find_by_latitude_and_longitude(40.739157, -73.990929) } 
+      subject { Daywalker::District.unique_by_latitude_and_longitude(40.739157, -73.990929) } 
 
       specify { subject.state.should == 'NY' }
       specify { subject.number.should == 14 }
@@ -22,7 +22,7 @@ describe Daywalker::District do
 
       specify 'should raise Daywalker::InvalidApiKey' do
         lambda {
-          Daywalker::District.find_by_latitude_and_longitude(40.739157, -73.990929)
+          Daywalker::District.unique_by_latitude_and_longitude(40.739157, -73.990929)
         }.should raise_error(Daywalker::BadApiKey)
       end
     end
@@ -30,7 +30,7 @@ describe Daywalker::District do
     describe 'missing latitude' do
       specify 'should raise ArgumentError for latitude' do
         lambda {
-          Daywalker::District.find_by_latitude_and_longitude(nil, -73.990929)
+          Daywalker::District.unique_by_latitude_and_longitude(nil, -73.990929)
         }.should raise_error(ArgumentError, /latitude/)
       end
     end
@@ -38,20 +38,20 @@ describe Daywalker::District do
     describe 'missing longitude' do
       specify 'should raise ArgumentError for longitude' do
         lambda {
-          Daywalker::District.find_by_latitude_and_longitude(40.739157, nil)
+          Daywalker::District.unique_by_latitude_and_longitude(40.739157, nil)
         }.should raise_error(ArgumentError, /longitude/)
       end
     end
   end
 
-  describe 'find_by_zipcode' do
+  describe 'all_by_zipcode' do
     describe 'happy path' do
       setup do
         # curl -i "http://services.sunlightlabs.com/api/districts.getDistrictsFromZip.xml?apikey=urkeyhere&zip=27511" > districts_by_zip.xml
         register_uri_with_response('districts.getDistrictsFromZip.xml?apikey=redacted&zip=27511', 'districts_by_zip.xml')
       end
 
-      subject { Daywalker::District.find_by_zip(27511) }
+      subject { Daywalker::District.all_by_zipcode(27511) }
 
       specify { subject.size.should == 2 }
 
@@ -70,7 +70,7 @@ describe Daywalker::District do
 
       specify 'should raise BadApiKey' do
         lambda {
-          Daywalker::District.find_by_zip(27511)
+          Daywalker::District.all_by_zipcode(27511)
         }.should raise_error(Daywalker::BadApiKey)
       end
     end
@@ -78,30 +78,30 @@ describe Daywalker::District do
     describe 'missing zip' do
       specify 'should raise ArgumentError for missing zip' do
         lambda {
-          Daywalker::District.find_by_zip(nil)
+          Daywalker::District.all_by_zipcode(nil)
         }.should raise_error(ArgumentError, /zip/)
       end
 
     end
   end
 
-  describe 'find_by_address' do
+  describe 'unique_by_address' do
     describe 'happy path' do
       before do
         Daywalker.geocoder.stub!(:locate).with("110 8th St., Troy, NY 12180").and_return({:longitude => -73.684236, :latitude => 42.731245})
 
-        Daywalker::District.stub!(:find_by_latitude_and_longitude).with(42.731245, -73.684236)
+        Daywalker::District.stub!(:unique_by_latitude_and_longitude).with(42.731245, -73.684236)
       end
 
-      it 'should use find_by_latitude_and_longitude' do
-        Daywalker::District.should_receive(:find_by_latitude_and_longitude).with(42.731245, -73.684236)
+      it 'should use unique_by_latitude_and_longitude' do
+        Daywalker::District.should_receive(:unique_by_latitude_and_longitude).with(42.731245, -73.684236)
 
-        Daywalker::District.find_by_address("110 8th St., Troy, NY 12180")
+        Daywalker::District.unique_by_address("110 8th St., Troy, NY 12180")
       end
 
       it 'should use the geocoder to locate a latitude and longitude' do
         Daywalker.geocoder.should_receive(:locate).with("110 8th St., Troy, NY 12180").and_return({:longitude => -73.684236, :latitude => 42.731245})
-        Daywalker::District.find_by_address("110 8th St., Troy, NY 12180")
+        Daywalker::District.unique_by_address("110 8th St., Troy, NY 12180")
       end
     end
   end
