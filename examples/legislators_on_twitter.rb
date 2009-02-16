@@ -1,9 +1,7 @@
 require 'rubygems'
 require 'daywalker'
 
-Daywalker.api_key = '8a328abd6ecaa0e335f703c24ef931cc'
-
-legislators = 
+Daywalker.api_key = 'redacted'
 
 legislators_with_twitter = Daywalker::Legislator.all.select do |legislator|
   ! legislator.twitter_id.nil?
