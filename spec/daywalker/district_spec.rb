@@ -1,19 +1,32 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Daywalker::District do
-  # TODO test parsing explicitly, and then don't test each result found in the finders
+  describe 'parsed from xml' do
+    before do
+      @xml = <<-XML
+        <district>
+          <state>NC</state>
+          <number>4</number>
+        </district>
+      XML
+    end
+    subject { Daywalker::District.parse(@xml) }
+
+    specify_its_attributes :state => 'NC', :number => 4
+  end
 
   describe 'unique_by_latitude_and_longitude' do
     describe 'happy path' do
       before do
         # curl -i "http://services.sunlightlabs.com/api/districts.getDistrictFromLatLong.xml?apikey=urkeyhere&latitude=40.739157&longitude=-73.990929" > districts_by_latlng.xml
         register_uri_with_response 'districts.getDistrictFromLatLong.xml?apikey=redacted&latitude=40.739157&longitude=-73.990929', 'districts_by_latlng.xml'
+        @district = Daywalker::District.unique_by_latitude_and_longitude(40.739157, -73.990929)
       end
 
-      subject { Daywalker::District.unique_by_latitude_and_longitude(40.739157, -73.990929) } 
-
-      specify { subject.state.should == 'NY' }
-      specify { subject.number.should == 14 }
+      it 'should return NY district 4' do
+        @district.state.should == 'NY'
+        @district.number.should == 14
+      end
     end
 
     describe 'bad api key' do
@@ -51,17 +64,13 @@ describe Daywalker::District do
       setup do
         # curl -i "http://services.sunlightlabs.com/api/districts.getDistrictsFromZip.xml?apikey=urkeyhere&zip=27511" > districts_by_zip.xml
         register_uri_with_response('districts.getDistrictsFromZip.xml?apikey=redacted&zip=27511', 'districts_by_zip.xml')
+        @districts = Daywalker::District.all_by_zipcode(27511)
       end
 
-      subject { Daywalker::District.all_by_zipcode(27511) }
-
-      specify { subject.size.should == 2 }
-
-      specify { subject[0].state.should == 'NC' }
-      specify { subject[0].number.should == 13 }
-      
-      specify { subject[1].state.should == 'NC' }
-      specify { subject[1].number.should == 4 }
+      it 'should find NC district 13 and 4' do
+        @districts.map{|d| d.state}.should == ['NC', 'NC']
+        @districts.map{|d| d.number}.should == [13, 4]
+      end
     end
 
     describe 'bad api key' do
