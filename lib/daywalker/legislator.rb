@@ -74,40 +74,19 @@ module Daywalker
       handle_response(response)
     end
 
-    # Find one or many legislators, based on a set of conditions. See 
-    # VALID_ATTRIBUTES for possible attributes you can search for.
-    # 
-    # If you want one legislators, and you expect there is exactly one
-    # legislator, use :one. An error will be raised if there are more than
-    # one result. An ArgumentErrror will be raised if multiple results come back.
+    # Find a unique legislator matching a Hash of attribute name/values. See VALID_ATTRIBUTES for possible attributes.
     #
-    #   Daywalker::Legislator.find(:one, :state => 'NY', :district => 4)
+    #   Daywalker::Legislator.unique(:state => 'NY', :district => 4)
     #
-    # Otherwise, use :all.
-    # 
-    #   Daywalker::Legislator.find(:all, :state => 'NY', :title => :senator)
+    # Dynamic finders based on the attribute names are also possible. This query can be rewritten as:
     #
-    # Additionally, dynamic finders based on these attributes are available:
+    #   Daywalker::Legislator.unique_by_state_and_district('NY', :district => 4)
     #
-    #   Daywalker::Legislator.find_by_state_and_district('NY', 4)
-    #   Daywalker::Legislator.find_all_by_state_and_senator('NY', :senator)
-    #def self.find(sym, conditions)
-      #url = case sym
-      #when :one then '/legislators.get.xml'
-      #when :all then '/legislators.getList.xml'
-      #else raise ArgumentError, "invalid argument #{sym.inspect}, only :one and :all are allowed"
-      #end
-
-      #conditions = TypeConverter.normalize_conditions(conditions)
-      #query = conditions.merge(:apikey => Daywalker.api_key)
-      #response = get(url, :query => query)
-
-      #case sym
-      #when :one then handle_response(response).first
-      #when :all then handle_response(response)
-      #end
-    #end
-
+    # Returns a Legislator. ArgumentError is raised if more than one result is found.
+    #
+    # Gotchas:
+    # * Results are case insensative (Richard and richard are equivilant)
+    # * Results are exact (Richard vs Rich)
     def self.unique(conditions)
       conditions = TypeConverter.normalize_conditions(conditions)
       query = conditions.merge(:apikey => Daywalker.api_key)
@@ -117,6 +96,20 @@ module Daywalker
       handle_response(response).first
     end
 
+    # Find all legislators matching a Hash of attribute name/values. See VALID_ATTRIBUTES for possible attributes.
+    #
+    #   Daywalker::Legislator.all(:state => 'NY', :title => :senator)
+    #
+    # Dynamic finders based on the attribute names are also possible. This query can be rewritten as:
+    #
+    #   Daywalker::Legislator.all_by_state_and_title('NY', :title => :senator)
+    #
+    # Returns an Array of Legislators.
+    #
+    # Gotchas:
+    # * Results are case insensative (Richard and richard are equivilant)
+    # * Results are exact (Richard vs Rich)
+    # * nil attributes will match anything, not legislators without a value for the attribute
     def self.all(conditions)
       conditions = TypeConverter.normalize_conditions(conditions)
       query = conditions.merge(:apikey => Daywalker.api_key)
@@ -126,6 +119,9 @@ module Daywalker
       handle_response(response)
     end
 
+    # Find all the legislators serving a specific latitude and longitude. This will include the district's Represenative, the Senior Senator, and the Junior Senator.
+    #
+    # Returns a Hash containing keys :representative, :junior_senator, and :senior_senator, with values corresponding to the appropriate Legislator.
     def self.all_by_latitude_and_longitude(latitude, longitude)
       district = District.unique_by_latitude_and_longitude(latitude, longitude)
 
@@ -140,6 +136,9 @@ module Daywalker
       }
     end
 
+    # Find all the legislators serving a specific address. This will include the district's Represenative, the Senior Senator, and the Junior Senator.
+    #
+    # Returns a Hash containing keys :representative, :junior_senator, and :senior_senator, with values corresponding to the appropriate Legislator.
     def self.all_by_address(address)
       location = Daywalker.geocoder.locate(address)
       all_by_latitude_and_longitude(location[:latitude], location[:longitude])
