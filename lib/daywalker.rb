@@ -33,4 +33,8 @@ module Daywalker
   # Error for when you use the API with a bad API key
   class BadApiKey < StandardError
   end
+
+  # Error for when an address can't be geocoded
+  class AddressError < StandardError
+  end
 end

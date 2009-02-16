@@ -28,4 +28,19 @@ describe Daywalker::Geocoder do
     end
   end
 
+  describe 'locate an address that is fake' do
+    before do
+      @geocoder = mock('geocoder')
+      Graticule::Geocoder::GeocoderUs.stub!(:new).and_return(@geocoder)
+
+      @geocoder.stub!(:locate).and_raise(Graticule::AddressError)
+    end
+
+    it 'should raise AddressError' do
+      lambda {
+        subject.locate('zomg')
+      }.should raise_error(Daywalker::AddressError)
+    end
+  end
+
 end

@@ -20,7 +20,7 @@ describe Daywalker::DynamicFinderMatch do
     specify { should_not be_a_match }
   end
 
-  describe 'finding one by valid attrribute (govtrack_id)' do
+  describe 'finding unique by valid attrribute (govtrack_id)' do
     subject { Daywalker::DynamicFinderMatch.new(:unique_by_govtrack_id) }
     specify { should be_a_match }
     specify 'should have :govtrack_id attribute' do

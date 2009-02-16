@@ -45,6 +45,8 @@ module Daywalker
     # Find the district for a specific address.
     #
     # Returns a District.
+    #
+    # Raises Daywalker::AddressError if the address can't be geocoded.
     def self.unique_by_address(address)
       raise(ArgumentError, 'missing required parameter address') if address.nil?
       location = Daywalker.geocoder.locate(address)

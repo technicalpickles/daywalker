@@ -4,6 +4,8 @@ module Daywalker
     def locate(address)
       location = geocoder.locate(address)
       { :longitude => location.longitude, :latitude => location.latitude }
+    rescue Graticule::AddressError => e
+      raise Daywalker::AddressError, e.message
     end
 
     private

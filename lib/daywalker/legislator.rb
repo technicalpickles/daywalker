@@ -122,6 +122,7 @@ module Daywalker
     # Find all the legislators serving a specific latitude and longitude. This will include the district's Represenative, the Senior Senator, and the Junior Senator.
     #
     # Returns a Hash containing keys :representative, :junior_senator, and :senior_senator, with values corresponding to the appropriate Legislator.
+    #
     def self.all_by_latitude_and_longitude(latitude, longitude)
       district = District.unique_by_latitude_and_longitude(latitude, longitude)
 
@@ -139,6 +140,8 @@ module Daywalker
     # Find all the legislators serving a specific address. This will include the district's Represenative, the Senior Senator, and the Junior Senator.
     #
     # Returns a Hash containing keys :representative, :junior_senator, and :senior_senator, with values corresponding to the appropriate Legislator.
+    #
+    # Raises Daywalker::AddressError if the address can't be geocoded.
     def self.all_by_address(address)
       location = Daywalker.geocoder.locate(address)
       all_by_latitude_and_longitude(location[:latitude], location[:longitude])

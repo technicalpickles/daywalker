@@ -15,6 +15,5 @@ module Daywalker
         Daywalker::Legislator::VALID_ATTRIBUTES.include? each
       end
     end
-
   end
 end
