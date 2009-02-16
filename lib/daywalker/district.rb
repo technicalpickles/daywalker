@@ -46,6 +46,7 @@ module Daywalker
     #
     # Returns a District.
     def self.unique_by_address(address)
+      raise(ArgumentError, 'missing required parameter address') if address.nil?
       location = Daywalker.geocoder.locate(address)
 
       unique_by_latitude_and_longitude(location[:latitude], location[:longitude])

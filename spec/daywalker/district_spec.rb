@@ -81,7 +81,6 @@ describe Daywalker::District do
           Daywalker::District.all_by_zipcode(nil)
         }.should raise_error(ArgumentError, /zip/)
       end
-
     end
   end
 
@@ -102,6 +101,14 @@ describe Daywalker::District do
       it 'should use the geocoder to locate a latitude and longitude' do
         Daywalker.geocoder.should_receive(:locate).with("110 8th St., Troy, NY 12180").and_return({:longitude => -73.684236, :latitude => 42.731245})
         Daywalker::District.unique_by_address("110 8th St., Troy, NY 12180")
+      end
+    end
+
+    describe 'with nil address' do
+      it 'should raise ArgumentError if address is not given' do
+        lambda {
+          Daywalker::District.unique_by_address(nil)
+        }.should raise_error(ArgumentError, /address/)
       end
     end
   end
