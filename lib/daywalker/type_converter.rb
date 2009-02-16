@@ -34,6 +34,15 @@ module Daywalker
       end
     end
 
+    def self.sym_or_i_to_district(sym)
+      case sym
+      when :junior_seat then 'Junior Seat'
+      when :senior_seat then 'Senior Seat'
+      when Fixnum then sym.to_s
+      else raise ArgumentError, "Unknown district #{sym.inspect}. Only :junior_seat, :senior_seat, and Fixnum are allowed."
+      end
+    end
+
     def self.sym_to_title_abbr(sym)
       case sym
       when :senator then 'Sen'
@@ -64,6 +73,10 @@ module Daywalker
     end
 
     def self.normalize_conditions(conditions)
+      if conditions[:district].kind_of?(Symbol)|| conditions[:district].kind_of?(Fixnum)
+        conditions[:district] = sym_or_i_to_district(conditions[:district])
+      end
+
       if conditions[:title].kind_of? Symbol
         conditions[:title] = sym_to_title_abbr(conditions[:title])
       end

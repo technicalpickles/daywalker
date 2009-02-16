@@ -73,6 +73,26 @@ describe Daywalker::TypeConverter do
     end
   end
 
+  describe 'sym_or_i_to_district' do
+    it 'should convert :junior_seat to Junior Seat' do
+      Daywalker::TypeConverter.sym_or_i_to_district(:junior_seat).should == 'Junior Seat'
+    end
+
+    it 'should convert :senior_seat to Senior Seat' do
+      Daywalker::TypeConverter.sym_or_i_to_district(:senior_seat).should == 'Senior Seat'
+    end
+
+    it 'should convert 5 to 5' do
+      Daywalker::TypeConverter.sym_or_i_to_district(5).should == '5'
+    end
+
+    it 'should raise ArgumentError for everything else' do
+      lambda {
+        Daywalker::TypeConverter.sym_or_i_to_district(:zomg)
+      }.should raise_error(ArgumentError)
+    end
+  end
+
   describe 'sym_to_title_abbr' do
     it 'should convert :senator to Sen' do
       Daywalker::TypeConverter.sym_to_title_abbr(:senator).should == 'Sen'
@@ -152,6 +172,10 @@ describe Daywalker::TypeConverter do
       }
     end
 
+    it 'should convert district value' do
+      Daywalker::TypeConverter.should_receive(:sym_or_i_to_district).with(5)
+      Daywalker::TypeConverter.normalize_conditions(@conditions)
+    end
     it 'should convert title value' do
       Daywalker::TypeConverter.should_receive(:sym_to_title_abbr).with(:senator)
       Daywalker::TypeConverter.normalize_conditions(@conditions)

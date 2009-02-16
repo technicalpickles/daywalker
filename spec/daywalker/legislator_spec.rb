@@ -133,6 +133,53 @@ describe Daywalker::Legislator do
     end
   end
 
+  describe 'find_all_by_latitude_and_longitude' do
+    before do
+      @district = mock('district', :state => 'NY', :number => 21)
+      Daywalker::District.stub!(:find_by_latitude_and_longitude).with(42.731245, -73.684236).and_return(@district)
+      
+      @representative = mock('representative')
+      @junior_senator = mock('junior senator')
+      @senior_senator = mock('senior senator')
+
+      Daywalker::Legislator.stub!(:find_by_state_and_district).with('NY', 21).and_return(@representative)
+      Daywalker::Legislator.stub!(:find_by_state_and_district).with('NY', :junior_senator).and_return(@junior_senator)
+      Daywalker::Legislator.stub!(:find_by_state_and_district).with('NY', :senior_senator).and_return(@senior_senator)
+    end
+
+    it 'should find district by lat & lng' do
+      Daywalker::District.should_receive(:find_by_latitude_and_longitude).with(42.731245, -73.684236).and_return(@district)
+
+      Daywalker::Legislator.find_all_by_latitude_and_longitude(42.731245, -73.684236)
+    end
+
+    it 'should find the representative for the district' do
+      Daywalker::Legislator.should_receive(:find_by_state_and_district).with('NY', 21).and_return(@representative)
+      
+      Daywalker::Legislator.find_all_by_latitude_and_longitude(42.731245, -73.684236)
+    end
+
+    it 'should find the junior senator for the state' do
+      Daywalker::Legislator.should_receive(:find_by_state_and_district).with('NY', :junior_senator).and_return(@junior_senator)
+
+      Daywalker::Legislator.find_all_by_latitude_and_longitude(42.731245, -73.684236)
+    end
+
+    it 'should find the senior senator for the state' do
+      Daywalker::Legislator.should_receive(:find_by_state_and_district).with('NY', :senior_senator).and_return(@senior_senator)
+
+      Daywalker::Legislator.find_all_by_latitude_and_longitude(42.731245, -73.684236)
+    end
+
+    it 'should return the representative, junior senator, and senior senator' do
+      Daywalker::Legislator.find_all_by_latitude_and_longitude(42.731245, -73.684236).should == {
+        :representative => @representative,
+        :junior_senator => @junior_senator,
+        :senior_senator => @senior_senator
+      }
+    end
+  end
+
   describe 'representative parsed from XML' do
     setup do
       @xml = <<-XML

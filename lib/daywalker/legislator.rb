@@ -108,6 +108,20 @@ module Daywalker
       end
     end
 
+    def self.find_all_by_latitude_and_longitude(latitude, longitude)
+      district = District.find_by_latitude_and_longitude(latitude, longitude)
+
+      representative = find_by_state_and_district(district.state, district.number)
+      junior_senator = find_by_state_and_district(district.state, :junior_senator)
+      senior_senator = find_by_state_and_district(district.state, :senior_senator)
+
+      {
+        :representative => representative,
+        :junior_senator => junior_senator,
+        :senior_senator => senior_senator
+      }
+    end
+
     def self.method_missing(method_id, *args, &block) # :nodoc:
       match = DynamicFinderMatch.new(method_id)
       if match.match?
@@ -118,7 +132,7 @@ module Daywalker
       end
     end
     
-    def self.respond_to?(method_id) # :nodoc:
+    def self.respond_to?(method_id, include_private = false) # :nodoc:
       match = DynamicFinderMatch.new(method_id)
       if match.match?
         true
