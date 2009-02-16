@@ -52,7 +52,7 @@ describe Daywalker::Legislator do
         end
       end
 
-      describe 'by state and district, with bad API key' do
+      describe 'with bad API key' do
         before do
           register_uri_with_response 'legislators.get.xml?apikey=redacted&state=NY&district=4', 'legislators_find_by_ny_district_4_bad_api.xml'
         end
@@ -64,7 +64,7 @@ describe Daywalker::Legislator do
         end
       end
 
-      describe 'by state and district, with multiple results' do
+      describe 'with multiple results' do
         before do
           register_uri_with_response 'legislators.get.xml?state=NY&title=Sen&apikey=redacted', 'legislators_find_one_by_ny_senators.xml'
         end
@@ -73,6 +73,18 @@ describe Daywalker::Legislator do
           lambda {
             Daywalker::Legislator.unique(:state => 'NY', :title => :senator)
           }.should raise_error(ArgumentError, "The conditions provided returned multiple results, by only one is expected")
+        end
+      end
+
+      describe 'with no results' do
+        before do
+          register_uri_with_response 'legislators.get.xml?state=JK&title=Sen&apikey=redacted', 'get_nonexistent_legislator.xml'
+        end
+
+        it 'should raise NotFoundError' do
+          lambda {
+            Daywalker::Legislator.unique(:state => 'JK', :title => :senator)
+          }.should raise_error(Daywalker::NotFoundError)
         end
       end
     end

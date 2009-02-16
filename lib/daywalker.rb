@@ -37,4 +37,8 @@ module Daywalker
   # Error for when an address can't be geocoded
   class AddressError < StandardError
   end
+
+  # Error for when an object was specifically looked for, but does not exist
+  class NotFoundError < StandardError
+  end
 end

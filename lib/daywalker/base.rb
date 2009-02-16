@@ -21,7 +21,10 @@ module Daywalker
     end
 
     def self.handle_bad_request(body)
-      raise "Don't know how to handle #{body.inspect}"
+      case body
+      when "No Such Object Exists" then raise NotFoundError
+      else raise "Don't know how to handle #{body.inspect}"
+      end
     end
   end
 end

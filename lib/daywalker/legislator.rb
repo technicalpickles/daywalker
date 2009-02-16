@@ -2,6 +2,7 @@ module Daywalker
   # Represents a legislator, either a Senator or Representative.
   #
   # They have the following attributes:
+  # TODO do this list as a definition list with types and possible values
   # * district (either :junior_seat or :senior_seat (for senators) or the number (for representatives)
   # * title (ether :senator or :representative)
   # * eventful_id (on http://eventful.com)
@@ -21,7 +22,7 @@ module Daywalker
   # * webform_url
   # * youtube_url
   # * nickname
-  # * phone
+  # * phone # FIXME normalize this to phone_number
   # * fec_id (on http://fec.gov)
   # * gender (:male or :female)
   # * name_suffix
@@ -65,6 +66,7 @@ module Daywalker
     # Find all legislators in a particular zip code
     def self.all_by_zip(zip)
       raise ArgumentError, 'missing required parameter zip' if zip.nil?
+
       query = {
         :zip => zip,
         :apikey => Daywalker.api_key
@@ -86,7 +88,7 @@ module Daywalker
     #
     # Gotchas:
     # * Results are case insensative (Richard and richard are equivilant)
-    # * Results are exact (Richard vs Rich)
+    # * Results are exact (Richard vs Rich are not the same)
     def self.unique(conditions)
       conditions = TypeConverter.normalize_conditions(conditions)
       query = conditions.merge(:apikey => Daywalker.api_key)
@@ -144,6 +146,7 @@ module Daywalker
     # Raises Daywalker::AddressError if the address can't be geocoded.
     def self.all_by_address(address)
       location = Daywalker.geocoder.locate(address)
+
       all_by_latitude_and_longitude(location[:latitude], location[:longitude])
     end
 
@@ -171,6 +174,7 @@ module Daywalker
     def self.handle_bad_request(body) # :nodoc:
       case body
       when "Multiple Legislators Returned" then raise(ArgumentError, "The conditions provided returned multiple results, by only one is expected")
+      # FIXME need to catcfh when legislator (or any object, which would mean it goes in super) is not found
       else super
       end
     end

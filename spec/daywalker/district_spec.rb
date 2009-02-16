@@ -1,6 +1,8 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Daywalker::District do
+  # TODO test parsing explicitly, and then don't test each result found in the finders
+
   describe 'unique_by_latitude_and_longitude' do
     describe 'happy path' do
       before do
