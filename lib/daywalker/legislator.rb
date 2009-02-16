@@ -165,6 +165,7 @@ module Daywalker
     # * Results are case insensative (Richard and richard are equivilant)
     # * Results are exact (Richard vs Rich)
     # * nil attributes will match anything, not legislators without a value for the attribute
+    # * Passing an Array of values to match, ie <tt>:state => ['NH', 'MA']</tt> is not supported at this time
     def self.all(conditions)
       conditions = TypeConverter.normalize_conditions(conditions)
       query = conditions.merge(:apikey => Daywalker.api_key)
