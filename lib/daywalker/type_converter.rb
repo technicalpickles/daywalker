@@ -4,7 +4,7 @@ module Daywalker
       case letter
       when 'M' then :male
       when 'F' then :female
-      else raise ArgumentError, "unknown gender #{letter.inspect}"
+      else raise ArgumentError, "Unknown gender #{letter.inspect}. Only M and F allowed."
       end
     end
 
@@ -13,7 +13,7 @@ module Daywalker
       when 'D' then :democrat
       when 'R' then :republican
       when 'I' then :independent
-      else raise ArgumentError, "unknown party #{letter.inspect}"
+      else raise ArgumentError, "Unknown party #{letter.inspect}. Only D, R, and I allowed."
       end
     end
 
@@ -21,7 +21,16 @@ module Daywalker
       case abbr
       when 'Sen' then :senator
       when 'Rep' then :representative
-      else raise ArgumentError, "Unknown title #{abbr.inspect}"
+      else raise ArgumentError, "Unknown title #{abbr.inspect}. Only Sen and Rep allowed."
+      end
+    end
+
+    def self.district_to_sym_or_i(district)
+      case district
+      when 'Junior Seat' then :junior_seat
+      when 'Senior Seat' then :senior_seat
+      when /^(\d+)$/ then $1.to_i
+      else raise ArgumentError, "Unknown district #{district.inspect}. Only Junior Seat, Senior Seat, and numbers allowed."
       end
     end
 
@@ -59,7 +68,6 @@ module Daywalker
         conditions[:title] = sym_to_title_abbr(conditions[:title])
       end
 
-      move_value_in_hash(conditions, :district_number, :district)
       move_value_in_hash(conditions, :official_rss_url, :official_rss)
 
       if conditions[:party].kind_of? Symbol

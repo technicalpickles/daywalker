@@ -2,14 +2,14 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Daywalker::DynamicFinderMatch do
   describe 'finding all by valid attributes (state and district number)' do
-    subject { Daywalker::DynamicFinderMatch.new(:find_all_by_state_and_district_number) }
+    subject { Daywalker::DynamicFinderMatch.new(:find_all_by_state_and_district) }
 
     specify 'should have :all finder' do
       subject.finder.should == :all
     end
 
-    specify 'should have attributes named [:state, :district_number]' do
-      subject.attribute_names.should == [:state, :district_number]
+    specify 'should have attributes named [:state, :district]' do
+      subject.attribute_names.should == [:state, :district]
     end
 
     specify { should be_a_match }

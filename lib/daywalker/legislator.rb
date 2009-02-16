@@ -2,7 +2,7 @@ module Daywalker
   # Represents a legislator, either a Senator or Representative.
   #
   # They have the following attributes:
-  # * district_number
+  # * district (either :junior_seat or :senior_seat (for senators) or the number (for representatives)
   # * title (ether :senator or :representative)
   # * eventful_id (on http://eventful.com)
   # * in_office (true or false)
@@ -31,7 +31,7 @@ module Daywalker
     include HappyMapper
 
     tag 'legislator'
-    element 'district_number', Integer, :tag => 'district'
+    element 'district', TypeConverter, :tag => 'district', :parser => :district_to_sym_or_i
     element 'title', TypeConverter, :parser => :title_abbr_to_sym
     element 'eventful_id', String
     element 'in_office', Boolean
@@ -60,7 +60,7 @@ module Daywalker
     element 'sunlight_old_id', String
     element 'congresspedia_url', String
 
-    VALID_ATTRIBUTES = [:district_number, :title, :eventful_id, :in_office, :state, :votesmart_id, :official_rss_url, :party, :email, :crp_id, :website_url, :fax_number, :govtrack_id, :first_name, :middle_name, :last_name, :congress_office, :bioguide_id, :webform_url, :youtube_url, :nickname, :phone, :fec_id, :gender, :name_suffix, :twitter_id, :sunlight_old_id, :congresspedia_url]
+    VALID_ATTRIBUTES = [:district, :title, :eventful_id, :in_office, :state, :votesmart_id, :official_rss_url, :party, :email, :crp_id, :website_url, :fax_number, :govtrack_id, :first_name, :middle_name, :last_name, :congress_office, :bioguide_id, :webform_url, :youtube_url, :nickname, :phone, :fec_id, :gender, :name_suffix, :twitter_id, :sunlight_old_id, :congresspedia_url]
 
     # Find all legislators in a particular zip code
     def self.find_all_by_zip(zip)
@@ -139,9 +139,9 @@ module Daywalker
     
     def self.create_finder_method(method, finder, attribute_names) # :nodoc:
       class_eval %{
-        def self.#{method}(*args)                                             # def self.find_all_by_district_number_and_state(*args)
+        def self.#{method}(*args)                                             # def self.find_all_by_district_and_state(*args)
           conditions = args.last.kind_of?(Hash) ? args.pop : {}               #   conditions = args.last.kind_of?(Hash) ? args.pop : {}
-          [:#{attribute_names.join(', :')}].each_with_index do |key, index|   #   [:district_number, :state].each_with_index do |key, index|
+          [:#{attribute_names.join(', :')}].each_with_index do |key, index|   #   [:district, :state].each_with_index do |key, index|
             conditions[key] = args[index]                                     #     conditions[key] = args[index]
           end                                                                 #   end
           find(#{finder.inspect}, conditions)                                 #   find(:all, conditions)

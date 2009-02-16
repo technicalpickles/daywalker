@@ -53,6 +53,26 @@ describe Daywalker::TypeConverter do
     end
   end
 
+  describe 'district_to_sym_or_i' do
+    it 'should convert 5 to 5' do
+      Daywalker::TypeConverter.district_to_sym_or_i('5').should == 5
+    end
+
+    it 'should convert Junior Seat to :junior_seat' do
+      Daywalker::TypeConverter.district_to_sym_or_i('Junior Seat').should == :junior_seat
+    end
+
+    it 'should convert Senior Seat to :senior_seat' do
+      Daywalker::TypeConverter.district_to_sym_or_i('Senior Seat').should == :senior_seat
+    end
+
+    it 'should raise ArgumentError for bad input' do
+      lambda {
+        Daywalker::TypeConverter.district_to_sym_or_i('zomg')
+      }.should raise_error(ArgumentError)
+    end
+  end
+
   describe 'sym_to_title_abbr' do
     it 'should convert :senator to Sen' do
       Daywalker::TypeConverter.sym_to_title_abbr(:senator).should == 'Sen'
@@ -119,7 +139,7 @@ describe Daywalker::TypeConverter do
     before do
       @conditions = {
         :title => :senator,
-        :district_number => 5,
+        :district => 5,
         :official_rss_url => 'http://zomg.com/index.rss',
         :party => :democrat,
         :website_url => 'http://zomg.com',
@@ -135,14 +155,6 @@ describe Daywalker::TypeConverter do
     it 'should convert title value' do
       Daywalker::TypeConverter.should_receive(:sym_to_title_abbr).with(:senator)
       Daywalker::TypeConverter.normalize_conditions(@conditions)
-    end
-
-    it 'should copy district_number value to district' do
-      Daywalker::TypeConverter.normalize_conditions(@conditions)[:district].should == 5
-    end
-
-    it 'should remove district_number value' do
-      Daywalker::TypeConverter.normalize_conditions(@conditions).should_not have_key(:district_number)
     end
 
     it 'should copy official_rss_url value to official_rss' do

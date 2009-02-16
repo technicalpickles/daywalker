@@ -133,8 +133,7 @@ describe Daywalker::Legislator do
     end
   end
 
-
-  describe 'parsed from XML' do
+  describe 'representative parsed from XML' do
     setup do
       @xml = <<-XML
         <legislator>
@@ -169,36 +168,166 @@ describe Daywalker::Legislator do
         </legislator>
       XML
     end
+
     subject { Daywalker::Legislator.parse(@xml) }
 
-    specify { subject.district_number.should == 4 }
-    specify { subject.title.should == :representative }
-    specify { subject.eventful_id.should == 'P0-001-000016562-5' }
-    specify { subject.in_office.should be_true }
-    specify { subject.state.should == 'NC' }
-    specify { subject.votesmart_id.should == 119 }
-    specify { subject.official_rss_url.should be_nil } 
-    specify { subject.party.should == :democrat }
-    specify { subject.email.should be_nil }
-    specify { subject.crp_id.should == 'N00002260' }
-    specify { subject.website_url.should == 'http://price.house.gov/' }
-    specify { subject.fax_number.should == '202-225-2014' }
-    specify { subject.govtrack_id.should == 400326 }
-    specify { subject.first_name.should == 'David' }
-    specify { subject.middle_name.should == 'Eugene' }
-    specify { subject.last_name.should == 'Price' }
-    specify { subject.congress_office.should == '2162 Rayburn House Office Building' }
-    specify { subject.bioguide_id.should == 'P000523' }
-    specify { subject.webform_url.should == 'http://price.house.gov/contact/contact_form.shtml' }
-    specify { subject.youtube_url.should == 'http://www.youtube.com/repdavidprice' }
-    specify { subject.nickname.should be_nil }
-    specify { subject.phone.should == '202-225-1784' }
-    specify { subject.fec_id.should == 'H6NC04037' }
-    specify { subject.gender.should == :male }
-    specify { subject.name_suffix.should be_nil }
-    specify { subject.twitter_id.should be_nil }
-    specify { subject.sunlight_old_id.should == 'fakeopenID319' }
-    specify { subject.congresspedia_url.should == 'http://www.sourcewatch.org/index.php?title=David_Price' }
+    specify_its_attributes  :district => 4,
+                            :title => :representative,
+                            :eventful_id => 'P0-001-000016562-5',
+                            :in_office => true,
+                            :state => 'NC',
+                            :votesmart_id => 119,
+                            :official_rss_url => nil,
+                            :party => :democrat,
+                            :email => nil,
+                            :crp_id => 'N00002260',
+                            :website_url => 'http://price.house.gov/',
+                            :fax_number => '202-225-2014',
+                            :govtrack_id => 400326,
+                            :first_name => 'David',
+                            :middle_name => 'Eugene',
+                            :last_name => 'Price',
+                            :congress_office => '2162 Rayburn House Office Building',
+                            :bioguide_id => 'P000523',
+                            :webform_url => 'http://price.house.gov/contact/contact_form.shtml',
+                            :youtube_url => 'http://www.youtube.com/repdavidprice',
+                            :nickname => nil,
+                            :phone => '202-225-1784',
+                            :fec_id => 'H6NC04037',
+                            :gender => :male,
+                            :name_suffix => nil,
+                            :twitter_id => nil,
+                            :sunlight_old_id => 'fakeopenID319',
+                            :congresspedia_url => 'http://www.sourcewatch.org/index.php?title=David_Price'
   end
+
+  describe 'senior senator parsed from XML' do
+    before do
+      @xml = <<-XML
+        <legislator>
+          <district>Senior Seat</district>
+          <title>Sen</title>
+          <eventful_id>P0-001-000016060-2</eventful_id>
+          <in_office>1</in_office>
+          <state>NC</state>
+          <votesmart_id>41533</votesmart_id>
+          <party>R</party>
+          <email/>
+          <crp_id>N00008071</crp_id>
+          <website>http://dole.senate.gov</website>
+          <fax>202-224-1100</fax>
+          <govtrack_id>300035</govtrack_id>
+          <firstname>Elizabeth</firstname>
+          <middlename>H.</middlename>
+          <lastname>Dole</lastname>
+          <congress_office>555 Dirksen Office Building</congress_office>
+          <bioguide_id>D000601</bioguide_id>
+          <webform>http://dole.senate.gov/public/index.cfm?FuseAction=ContactInformation.ContactForm</webform>
+          <nickname/>
+          <phone>202-224-6342</phone>
+          <fec_id>S2NC00083</fec_id>
+          <gender>F</gender>
+          <name_suffix/>
+          <twitter_id/>
+          <sunlight_old_id>fakeopenID468</sunlight_old_id>
+          <congresspedia_url>http://www.sourcewatch.org/index.php?title=Elizabeth_Dole</congresspedia_url>
+        </legislator>
+      XML
+    end
+
+    subject { Daywalker::Legislator.parse(@xml) }
+
+    specify_its_attributes  :district => :senior_seat,
+                            :title => :senator,
+                            :eventful_id => 'P0-001-000016060-2',
+                            :in_office => true,
+                            :state => 'NC',
+                            :votesmart_id => 41533,
+                            :party => :republican,
+                            :email => nil,
+                            :crp_id => 'N00008071',
+                            :website_url => 'http://dole.senate.gov',
+                            :fax_number => '202-224-1100',
+                            :govtrack_id => 300035,
+                            :first_name => 'Elizabeth',
+                            :middle_name => 'H.',
+                            :last_name => 'Dole',
+                            :congress_office => '555 Dirksen Office Building',
+                            :bioguide_id => 'D000601',
+                            :webform_url => 'http://dole.senate.gov/public/index.cfm?FuseAction=ContactInformation.ContactForm',
+                            :nickname => nil,
+                            :phone => '202-224-6342',
+                            :fec_id => 'S2NC00083',
+                            :gender => :female,
+                            :name_suffix => nil,
+                            :twitter_id => nil,
+                            :sunlight_old_id => 'fakeopenID468',
+                            :congresspedia_url => 'http://www.sourcewatch.org/index.php?title=Elizabeth_Dole'
+  end
+
+  describe 'junior senator parsed from XML' do
+    before do
+      @xml = <<-XML
+        <legislator>
+          <district>Junior Seat</district>
+          <title>Sen</title>
+          <eventful_id>P0-001-000016040-8</eventful_id>
+          <in_office>1</in_office>
+          <state>NC</state>
+          <votesmart_id>21787</votesmart_id>
+          <party>R</party>
+          <email/>
+          <crp_id>N00002221</crp_id>
+          <website>http://burr.senate.gov/</website>
+          <fax>202-228-2981</fax>
+          <govtrack_id>400054</govtrack_id>
+          <firstname>Richard</firstname>
+          <middlename>M.</middlename>
+          <lastname>Burr</lastname>
+          <congress_office>217 Russell Senate Office Building</congress_office>
+          <bioguide_id>B001135</bioguide_id>
+          <webform>http://burr.senate.gov/public/index.cfm?FuseAction=Contact.Home</webform>
+          <nickname/>
+          <phone>202-224-3154</phone>
+          <fec_id>S4NC00089</fec_id>
+          <gender>M</gender>
+          <name_suffix/>
+          <twitter_id/>
+          <sunlight_old_id>fakeopenID449</sunlight_old_id>
+          <congresspedia_url>http://www.sourcewatch.org/index.php?title=Richard_Burr</congresspedia_url>
+        </legislator>
+      XML
+    end
+
+    subject { Daywalker::Legislator.parse(@xml) }
+
+    specify_its_attributes :district => :junior_seat,
+                           :title => :senator,
+                           :eventful_id => 'P0-001-000016040-8',
+                           :in_office => true,
+                           :state => 'NC',
+                           :votesmart_id => 21787,
+                           :party => :republican,
+                           :email => nil,
+                           :crp_id => 'N00002221',
+                           :website_url => 'http://burr.senate.gov/',
+                           :fax_number => '202-228-2981',
+                           :govtrack_id => 400054,
+                           :first_name => 'Richard',
+                           :middle_name => 'M.',
+                           :last_name => 'Burr',
+                           :congress_office => '217 Russell Senate Office Building',
+                           :bioguide_id => 'B001135',
+                           :webform_url => 'http://burr.senate.gov/public/index.cfm?FuseAction=Contact.Home',
+                           :nickname => nil,
+                           :phone => '202-224-3154',
+                           :fec_id => 'S4NC00089',
+                           :gender => :male,
+                           :name_suffix => nil,
+                           :twitter_id => nil,
+                           :sunlight_old_id => 'fakeopenID449',
+                           :congresspedia_url => 'http://www.sourcewatch.org/index.php?title=Richard_Burr'
+  end
+
 
 end
