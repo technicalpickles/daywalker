@@ -7,7 +7,7 @@ A Ruby wrapper for the Sunlight Labs API: http://wiki.sunlightlabs.com/Sunlight_
   # Run the following if you haven't already:
   gem sources -a http://gems.github.com
   # Install the gem(s):
-  sudo gem install technicalpickles-daywalke
+  sudo gem install technicalpickles-daywalker
 
 == Get an API key
 

@@ -9,6 +9,24 @@ require 'daywalker/district'
 require 'daywalker/legislator'
 require 'daywalker/geocoder'
 
+# Daywalker is a Ruby-wrapper around the Sunlight API (http://wiki.sunlightlabs.com/Sunlight_API_Documentation). It implements all the functionality of the API related to Districts and Legislators (the Lobbyist API is considered experimental).
+#
+# Before using the API, you must register for an API key: http://services.sunlightlabs.com/api/register/
+#
+# After registering, you'll receive an email with a link to activate the key.
+# 
+# To begin with, here's a small example script to print out all the districts and legislators for a zipcode:
+#
+#   require 'rubygems'
+#   require 'pp'
+#   require 'daywalker'
+#
+#   Daywalker.api_key = 'the api key you received'
+#
+#   pp Daywalker::Legislator.all_by_zip(02114)
+#   pp Daywalker::District.all_by_zip(02114)
+#
+# See Daywalker::District and Daywalker::Legislator for more details on usage.
 module Daywalker
   # Set the API to be used. This must be set when using Daywalker, BadApiKeyErrors will be occur.
   def self.api_key=(api_key)
