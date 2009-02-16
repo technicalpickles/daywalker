@@ -7,7 +7,7 @@ module Daywalker
 
     def self.handle_response(response)
       case response.code.to_i
-      when 403 then raise BadApiKey
+      when 403 then raise BadApiKeyError
       when 200
         begin
           parse(response.body)

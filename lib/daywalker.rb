@@ -31,7 +31,7 @@ module Daywalker
   self.geocoder = Daywalker::Geocoder.new
 
   # Error for when you use the API with a bad API key
-  class BadApiKey < StandardError
+  class BadApiKeyError < StandardError
   end
 
   # Error for when an address can't be geocoded

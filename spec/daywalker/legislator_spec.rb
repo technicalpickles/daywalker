@@ -26,7 +26,7 @@ describe Daywalker::Legislator do
       it 'should raise bad API key error' do
         lambda {
           Daywalker::Legislator.all_by_zip 27511
-        }.should raise_error(Daywalker::BadApiKey) 
+        }.should raise_error(Daywalker::BadApiKeyError) 
       end
     end
 
@@ -60,7 +60,7 @@ describe Daywalker::Legislator do
         it 'should raise a missing parameter error for zip' do
           lambda {
             Daywalker::Legislator.unique(:state => 'NY', :district => 4)
-          }.should raise_error(Daywalker::BadApiKey) 
+          }.should raise_error(Daywalker::BadApiKeyError) 
         end
       end
 
@@ -109,10 +109,10 @@ describe Daywalker::Legislator do
           register_uri_with_response 'legislators.getList.xml?state=NY&apikey=redacted&title=Sen', 'legislators_find_ny_senators_bad_api.xml'
         end
 
-        it 'should raise BadApiKey error' do
+        it 'should raise BadApiKeyError' do
           lambda {
             Daywalker::Legislator.all(:state => 'NY', :title => :senator)
-          }.should raise_error(Daywalker::BadApiKey)
+          }.should raise_error(Daywalker::BadApiKeyError)
         end
       end
     end

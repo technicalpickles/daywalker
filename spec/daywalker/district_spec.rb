@@ -22,10 +22,10 @@ describe Daywalker::District do
         register_uri_with_response('districts.getDistrictFromLatLong.xml?apikey=redacted&latitude=40.739157&longitude=-73.990929', 'districts_by_latlng_bad_api.xml')
       end
 
-      specify 'should raise Daywalker::InvalidApiKey' do
+      specify 'should raise Daywalker::BadApiKeyError' do
         lambda {
           Daywalker::District.unique_by_latitude_and_longitude(40.739157, -73.990929)
-        }.should raise_error(Daywalker::BadApiKey)
+        }.should raise_error(Daywalker::BadApiKeyError)
       end
     end
 
@@ -70,10 +70,10 @@ describe Daywalker::District do
         register_uri_with_response 'districts.getDistrictsFromZip.xml?apikey=redacted&zip=27511', 'districts_by_zip_bad_api.xml'
       end
 
-      specify 'should raise BadApiKey' do
+      specify 'should raise BadApiKeyError' do
         lambda {
           Daywalker::District.all_by_zipcode(27511)
-        }.should raise_error(Daywalker::BadApiKey)
+        }.should raise_error(Daywalker::BadApiKeyError)
       end
     end
 
