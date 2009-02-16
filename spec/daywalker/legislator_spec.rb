@@ -143,8 +143,8 @@ describe Daywalker::Legislator do
       @senior_senator = mock('senior senator')
 
       Daywalker::Legislator.stub!(:find_by_state_and_district).with('NY', 21).and_return(@representative)
-      Daywalker::Legislator.stub!(:find_by_state_and_district).with('NY', :junior_senator).and_return(@junior_senator)
-      Daywalker::Legislator.stub!(:find_by_state_and_district).with('NY', :senior_senator).and_return(@senior_senator)
+      Daywalker::Legislator.stub!(:find_by_state_and_district).with('NY', :junior_seat).and_return(@junior_senator)
+      Daywalker::Legislator.stub!(:find_by_state_and_district).with('NY', :senior_seat).and_return(@senior_senator)
     end
 
     it 'should find district by lat & lng' do
@@ -160,13 +160,13 @@ describe Daywalker::Legislator do
     end
 
     it 'should find the junior senator for the state' do
-      Daywalker::Legislator.should_receive(:find_by_state_and_district).with('NY', :junior_senator).and_return(@junior_senator)
+      Daywalker::Legislator.should_receive(:find_by_state_and_district).with('NY', :junior_seat).and_return(@junior_senator)
 
       Daywalker::Legislator.find_all_by_latitude_and_longitude(42.731245, -73.684236)
     end
 
     it 'should find the senior senator for the state' do
-      Daywalker::Legislator.should_receive(:find_by_state_and_district).with('NY', :senior_senator).and_return(@senior_senator)
+      Daywalker::Legislator.should_receive(:find_by_state_and_district).with('NY', :senior_seat).and_return(@senior_senator)
 
       Daywalker::Legislator.find_all_by_latitude_and_longitude(42.731245, -73.684236)
     end
@@ -178,6 +178,27 @@ describe Daywalker::Legislator do
         :senior_senator => @senior_senator
       }
     end
+  end
+
+  describe 'find_all_by_address' do
+    before do
+      Daywalker.geocoder.stub!(:locate).with("110 8th St., Troy, NY 12180").and_return({:longitude => -73.684236, :latitude => 42.731245})
+
+      Daywalker::Legislator.stub!(:find_all_by_latitude_and_longitude).with(42.731245, -73.684236)
+    end
+
+    it 'should geocode the address' do
+      Daywalker.geocoder.should_receive(:locate).with("110 8th St., Troy, NY 12180").and_return({:longitude => -73.684236, :latitude => 42.731245})
+
+      Daywalker::Legislator.find_all_by_address("110 8th St., Troy, NY 12180")
+    end
+
+    it 'should find legislators by latitude and longitude' do
+      Daywalker::Legislator.should_receive(:find_all_by_latitude_and_longitude).with(42.731245, -73.684236)
+
+      Daywalker::Legislator.find_all_by_address("110 8th St., Troy, NY 12180")
+    end
+
   end
 
   describe 'representative parsed from XML' do
