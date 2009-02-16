@@ -10,7 +10,7 @@ require 'daywalker/legislator'
 require 'daywalker/geocoder'
 
 module Daywalker
-  # Set the API to be used
+  # Set the API to be used. This must be set when using Daywalker, BadApiKeyErrors will be occur.
   def self.api_key=(api_key)
     @api_key = api_key
   end
@@ -20,11 +20,11 @@ module Daywalker
     @api_key
   end
 
-  def self.geocoder=(geocoder)
+  def self.geocoder=(geocoder) # :nodoc:
     @geocoder = geocoder
   end
 
-  def self.geocoder
+  def self.geocoder # :nodoc:
     @geocoder
   end
 

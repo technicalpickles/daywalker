@@ -1,5 +1,5 @@
 module Daywalker
-  class Geocoder
+  class Geocoder # :nodoc:
 
     def locate(address)
       location = geocoder.locate(address)

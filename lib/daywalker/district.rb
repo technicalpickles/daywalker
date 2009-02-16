@@ -27,7 +27,7 @@ module Daywalker
       handle_response(response).first
     end
 
-    # Finds all districts for zip code.
+    # Finds all districts for a specific zip code.
     #
     # Returns an Array of Districts. Raises ArgumentError if you omit the zip.
     def self.all_by_zipcode(zip)

@@ -2,32 +2,85 @@ module Daywalker
   # Represents a legislator, either a Senator or Representative.
   #
   # They have the following attributes:
-  # TODO do this list as a definition list with types and possible values
-  # * district (either :junior_seat or :senior_seat (for senators) or the number (for representatives)
-  # * title (ether :senator or :representative)
-  # * eventful_id (on http://eventful.com)
-  # * in_office (true or false)
-  # * state (two-letter abbreviation)
-  # * votesmart_id (on http://www.votesmart.org)
-  # * party (:democrat, :republican, or :independent)
-  # * crp_id (on http://opensecrets.org)
-  # * website_url
-  # * fax_number
-  # * govtrack_id (on http://www.govtrack.us)
-  # * first_name
-  # * middle_name
-  # * last_name
-  # * congress_office (address in Washington, DC)
-  # * bioguide_id (on http://bioguide.congress.gov)
-  # * webform_url
-  # * youtube_url
-  # * nickname
-  # * phone # FIXME normalize this to phone_number
-  # * fec_id (on http://fec.gov)
-  # * gender (:male or :female)
-  # * name_suffix
-  # * twitter_id (on http://twitter.com)
-  # * congresspedia_url
+  #
+  # +title+::
+  #   The title held by a Legislator, as a Symbol, ether <tt>:senator</tt> or <tt>:representative</tt>
+  #
+  # +first_name+::
+  #   Legislator's first name
+  #
+  # +middle_name+::
+  #   Legislator's middle name
+  #
+  # +last_name+::
+  #   Legislator's last name
+  #
+  # +name_suffix+::
+  #   Legislator's suffix (Jr., III, etc)
+  #
+  # +nickname+::
+  #   Preferred nickname of Legislator
+  #
+  # +party+::
+  #   Legislator's party as a +Sybmol+, <tt>:democrat</tt>, <tt>:republican</tt>, or <tt>:independent</tt>.
+  #
+  # +state+::
+  #   two-letter +String+ abbreviation of the Legislator's state.
+  #
+  # +district+:: 
+  #   The district a Legislator represents. For Representatives, this is a +Fixnum+. For Senators, this is a +Symbol+, either <tt>:junior_seat</tt> or <tt>:senior_seat</tt>.
+  #
+  # +in_office+::
+  #   +true+ if the Legislator is currently server, or false if the Legislator is no longer due to defeat/resignation/death/etc.
+  #
+  # +gender+::
+  #   Legislator's gender as a +Symbol+, :male or :female
+  #
+  # +phone+::
+  #   Legislator's Congressional office phone number
+  #   # FIXME normalize this to phone_number
+  #
+  # +fax_number+::
+  #   Legislator's Congressional office fax number
+  #
+  # +website_url+::
+  #   URL of the Legislator's Congressional wesbite as a +String+
+  #
+  # +webform_url+::
+  #   URL of the Legislator's web contact form as a +String+
+  #
+  # +email+::
+  #   Legislator's email address
+  #
+  # +congress_office+::
+  #   Legislator's Washington, DC Office Address
+  #
+  # +bioguide_id+::
+  #   Legislator's ID assigned by the COngressional Biographical DIrectory (http://bioguide.congress.gov) and also used by the Washington Post and NY Times.
+  #
+  # +votesmart_id+::
+  #   Legislator ID assigned by Project Vote Smart (http://www.votesmart.org).
+  #
+  # +fec_id+::
+  #   Legislator's ID provided by the Federal Election Commission (http://fec.gov)
+  #
+  # +govtrack_id+::
+  #   Legislator's ID provided by Govtrack.us (http://www.govtrack.us)
+  #
+  # +crp_id+::
+  #   Legislator's ID provided by Center for Responsive Politics (http://opensecrets.org)
+  #
+  # +eventful_id+::
+  #   Legislator's 'Performer ID' on http://eventful.com
+  #
+  # +congresspedia_url+::
+  #   URL of the Legislator's Congresspedia entry (http://congresspedia.org)
+  #
+  # +twitter_id+::
+  #   Legislator's ID on Twitter (http://twitter.com)
+  #
+  # +youtube_url+::
+  #   URL of the Legislator's YouTube account (http://youtube.com) as a +String+
   class Legislator < Base
     include HappyMapper
 
@@ -63,7 +116,7 @@ module Daywalker
 
     VALID_ATTRIBUTES = [:district, :title, :eventful_id, :in_office, :state, :votesmart_id, :official_rss_url, :party, :email, :crp_id, :website_url, :fax_number, :govtrack_id, :first_name, :middle_name, :last_name, :congress_office, :bioguide_id, :webform_url, :youtube_url, :nickname, :phone, :fec_id, :gender, :name_suffix, :twitter_id, :sunlight_old_id, :congresspedia_url]
 
-    # Find all legislators in a particular zip code
+    # Find all Legislators who serve a particular zip code. This would include the Junior and Senior Senators, as well as the Representatives of any Districts in the zip code.
     def self.all_by_zip(zip)
       raise ArgumentError, 'missing required parameter zip' if zip.nil?
 
@@ -82,7 +135,7 @@ module Daywalker
     #
     # Dynamic finders based on the attribute names are also possible. This query can be rewritten as:
     #
-    #   Daywalker::Legislator.unique_by_state_and_district('NY', :district => 4)
+    #   Daywalker::Legislator.unique_by_state_and_district('NY', 4)
     #
     # Returns a Legislator. ArgumentError is raised if more than one result is found.
     #
@@ -104,7 +157,7 @@ module Daywalker
     #
     # Dynamic finders based on the attribute names are also possible. This query can be rewritten as:
     #
-    #   Daywalker::Legislator.all_by_state_and_title('NY', :title => :senator)
+    #   Daywalker::Legislator.all_by_state_and_title('NY', :senator)
     #
     # Returns an Array of Legislators.
     #
