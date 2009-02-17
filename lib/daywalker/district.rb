@@ -53,5 +53,25 @@ module Daywalker
 
       unique_by_latitude_and_longitude(location[:latitude], location[:longitude])
     end
+
+    def initialize(attributes = {})
+      attributes.each do |attribute, value|
+        send("#{attribute}=", value)
+      end
+    end
+
+    def legislators
+      @legislators ||= begin
+        representative = Legislator.unique_by_state_and_district(state, number)
+        junior_senator = Legislator.unique_by_state_and_district(state, :junior_seat)
+        senior_senator = Legislator.unique_by_state_and_district(state, :senior_seat)
+
+        {
+          :representative => representative,
+          :junior_senator => junior_senator,
+          :senior_senator => senior_senator
+        }
+      end
+    end
   end
 end

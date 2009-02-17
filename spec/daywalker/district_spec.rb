@@ -123,5 +123,56 @@ describe Daywalker::District do
       end
     end
   end
+
+  describe 'legislators' do
+    before do
+      @district = Daywalker::District.new(:state => 'NY', :number => 21)
+
+      @representative = mock('representative')
+      @junior_senator = mock('junior senator')
+      @senior_senator = mock('senior senator')
+
+      Daywalker::Legislator.stub!(:unique_by_state_and_district).with('NY', 21).and_return(@representative)
+      Daywalker::Legislator.stub!(:unique_by_state_and_district).with('NY', :junior_seat).and_return(@junior_senator)
+      Daywalker::Legislator.stub!(:unique_by_state_and_district).with('NY', :senior_seat).and_return(@senior_senator)
+    end
+
+    it 'should find the representative for the district' do
+      Daywalker::Legislator.should_receive(:unique_by_state_and_district).with('NY', 21).and_return(@representative)
+      
+      @district.legislators
+    end
+
+    it 'should find the junior senator for the state' do
+      Daywalker::Legislator.should_receive(:unique_by_state_and_district).with('NY', :junior_seat).and_return(@junior_senator)
+
+      @district.legislators
+    end
+
+    it 'should find the senior senator for the state' do
+      Daywalker::Legislator.should_receive(:unique_by_state_and_district).with('NY', :senior_seat).and_return(@senior_senator)
+
+      @district.legislators
+    end
+
+    it 'should return the representative, junior senator, and senior senator' do
+      @district.legislators.should == {
+        :representative => @representative,
+        :junior_senator => @junior_senator,
+        :senior_senator => @senior_senator
+      }
+    end
+
+    it 'should not not attempt to look up if it has been done already' do
+      @district.legislators
+
+      Daywalker::Legislator.should_not_receive(:unique_by_state_and_district).with('NY', :senior_seat).and_return(@senior_senator)
+      Daywalker::Legislator.should_not_receive(:unique_by_state_and_district).with('NY', :senior_seat).and_return(@senior_senator)
+      Daywalker::Legislator.should_not_receive(:unique_by_state_and_district).with('NY', 21).and_return(@representative)
+
+      @district.legislators
+    end
+
+  end
 end
 
