@@ -169,13 +169,16 @@ describe Daywalker::Legislator do
       @district = mock('district', :state => 'NY', :number => 21)
       Daywalker::District.stub!(:unique_by_latitude_and_longitude).with(42.731245, -73.684236).and_return(@district)
       
+
       @representative = mock('representative')
       @junior_senator = mock('junior senator')
       @senior_senator = mock('senior senator')
 
-      Daywalker::Legislator.stub!(:unique_by_state_and_district).with('NY', 21).and_return(@representative)
-      Daywalker::Legislator.stub!(:unique_by_state_and_district).with('NY', :junior_seat).and_return(@junior_senator)
-      Daywalker::Legislator.stub!(:unique_by_state_and_district).with('NY', :senior_seat).and_return(@senior_senator)
+      @district.stub!(:legislators).and_return({
+        :representative => @representative,
+        :junior_senator => @junior_senator,
+        :senior_senator => @senior_senator
+      })
     end
 
     it 'should find district by lat & lng' do
@@ -184,20 +187,8 @@ describe Daywalker::Legislator do
       Daywalker::Legislator.all_by_latitude_and_longitude(42.731245, -73.684236)
     end
 
-    it 'should find the representative for the district' do
-      Daywalker::Legislator.should_receive(:unique_by_state_and_district).with('NY', 21).and_return(@representative)
-      
-      Daywalker::Legislator.all_by_latitude_and_longitude(42.731245, -73.684236)
-    end
-
-    it 'should find the junior senator for the state' do
-      Daywalker::Legislator.should_receive(:unique_by_state_and_district).with('NY', :junior_seat).and_return(@junior_senator)
-
-      Daywalker::Legislator.all_by_latitude_and_longitude(42.731245, -73.684236)
-    end
-
-    it 'should find the senior senator for the state' do
-      Daywalker::Legislator.should_receive(:unique_by_state_and_district).with('NY', :senior_seat).and_return(@senior_senator)
+    it 'should find the legislators for the district' do
+      @district.should_receive(:legislators)
 
       Daywalker::Legislator.all_by_latitude_and_longitude(42.731245, -73.684236)
     end

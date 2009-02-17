@@ -192,15 +192,7 @@ module Daywalker
     def self.all_by_latitude_and_longitude(latitude, longitude)
       district = District.unique_by_latitude_and_longitude(latitude, longitude)
 
-      representative = unique_by_state_and_district(district.state, district.number)
-      junior_senator = unique_by_state_and_district(district.state, :junior_seat)
-      senior_senator = unique_by_state_and_district(district.state, :senior_seat)
-
-      {
-        :representative => representative,
-        :junior_senator => junior_senator,
-        :senior_senator => senior_senator
-      }
+      district.legislators
     end
 
     # Find all the legislators serving a specific address. This will include the district's Represenative, the Senior Senator, and the Junior Senator.
