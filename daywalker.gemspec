@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 
+
 Gem::Specification.new do |s|
   s.name = %q{daywalker}
   s.version = "0.3.0"
