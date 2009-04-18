@@ -24,7 +24,7 @@ describe Daywalker::Legislator do
 
   describe 'all_by_zip' do
     describe 'happy path' do
-      setup do
+      before do
         # curl -i "http://services.sunlightlabs.com/api/legislators.allForZip.xml?zip=27511&apikey=redacted" > legislators_by_zip.xml
         register_uri_with_response 'legislators.allForZip.xml?zip=27511&apikey=redacted', 'legislators_by_zip.xml'
 
@@ -37,7 +37,7 @@ describe Daywalker::Legislator do
     end
 
     describe 'with a bad API key' do
-      setup do
+      before do
         #  curl -i "http://services.sunlightlabs.com/api/legislators.allForZip.xml?zip=27511&apikey=redacted" > legislators_by_zip
         register_uri_with_response 'legislators.allForZip.xml?zip=27511&apikey=redacted', 'legislators_by_zip_bad_api.xml'
       end
@@ -224,7 +224,7 @@ describe Daywalker::Legislator do
   end
 
   describe 'representative parsed from XML' do
-    setup do
+    before do
       @xml = <<-XML
         <legislator>
           <district>4</district>

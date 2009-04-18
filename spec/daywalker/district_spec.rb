@@ -61,7 +61,7 @@ describe Daywalker::District do
 
   describe 'all_by_zipcode' do
     describe 'happy path' do
-      setup do
+      before do
         # curl -i "http://services.sunlightlabs.com/api/districts.getDistrictsFromZip.xml?apikey=urkeyhere&zip=27511" > districts_by_zip.xml
         register_uri_with_response('districts.getDistrictsFromZip.xml?apikey=redacted&zip=27511', 'districts_by_zip.xml')
         @districts = Daywalker::District.all_by_zipcode(27511)
@@ -74,7 +74,7 @@ describe Daywalker::District do
     end
 
     describe 'bad api key' do
-      setup do
+      before do
         # curl -i "http://services.sunlightlabs.com/api/districts.getDistrictsFromZip.xml?apikey=badkeyhere&zip=27511" > districts_by_zip_bad_api.xml 
         register_uri_with_response 'districts.getDistrictsFromZip.xml?apikey=redacted&zip=27511', 'districts_by_zip_bad_api.xml'
       end

@@ -5,6 +5,10 @@ require 'fake_web'
 
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.dirname(__FILE__), '..', 'lib')
+Dir.glob('../vendor/**/lib').each do |lib_dir|
+  $LOAD_PATH.unshift lib_dir
+end
+$LOAD_PATH
 
 require 'daywalker'
 
