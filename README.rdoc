@@ -1,6 +1,13 @@
 = daywalker
 
+
 A Ruby wrapper for the Sunlight Labs API: http://wiki.sunlightlabs.com/Sunlight_API_Documentation
+
+= DEPRECATED
+
+This gem is no longer under active development. THe official gem would be abetter place to go:
+
+ * http://github.com/sunlightlabs/ruby-sunlightapi
 
 == Install
 
@@ -43,7 +50,7 @@ After registering, you will receive an email prompting you to activate the API k
 == FAQ
 
 Q:: Why not use the existing gem, available at http://github.com/luigi/sunlight/tree/master ?
-A:: Mostly, I didn't have a good experience when just poking around the Sunlight Labs API. I was dense and didn't activate my API key at first, but it didn't notice that. Even after activating, I wasn't getting any data back.
+A:: Mostly, I didn't have a good experience when I was first poking around the Sunlight Labs API. I was dense and didn't activate my API key at first, but it didn't notice that. Even after activating, I wasn't getting any data back.
 
 == COPYRIGHT
 
